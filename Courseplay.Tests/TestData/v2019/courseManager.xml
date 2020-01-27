@@ -1,0 +1,8 @@
+﻿<courseManager>
+    <saveSlot>
+        <slot fileName="courseStorage0001.xml" id="1" parent="0" isUsed="true" name="9-8.4"/>
+        <slot fileName="courseStorage0002.xml" id="2" parent="0" isUsed="true" name="Teest2"/>
+        <slot fileName="courseStorage0003.xml" id="3" parent="0" isUsed="true" name="Test3"/>
+        <slot fileName="courseStorage0004.xml" id="4" parent="0" isUsed="true" name="On road"/>
+    </saveSlot>
+</courseManager>
