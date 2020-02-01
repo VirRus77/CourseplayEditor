@@ -16,6 +16,14 @@ namespace CourseplayEditor.Tools.Tools.Extensions
             }
         }
 
+        public static Stream TransformToXmlStream(this XslCompiledTransform xslt, Stream stream)
+        {
+            var xml = new XmlDocument();
+            xml.Load(stream);
+
+            return xslt.TransformToXmlStream(xml);
+        }
+
         public static Stream TransformToXmlStream(this XslCompiledTransform xslt, XmlDocument xml)
         {
             var stream = new MemoryStream();
@@ -24,9 +32,9 @@ namespace CourseplayEditor.Tools.Tools.Extensions
                 xslt.Transform(xml, xmlWriter);
                 xmlWriter.Flush();
             }
+
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
-
         }
 
         public static Stream TransformToXmlStream(this XslCompiledTransform xslt, XmlReader xmlReader, Stream stream = null)
@@ -43,6 +51,7 @@ namespace CourseplayEditor.Tools.Tools.Extensions
                 xslt.Transform(xmlReader, xmlWriter);
                 xmlWriter.Flush();
             }
+
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
         }

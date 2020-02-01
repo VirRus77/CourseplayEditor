@@ -5,7 +5,6 @@ using Courseplay.Tests.Tools;
 using CourseplayEditor.Tools.Courseplay.Data;
 using CourseplayEditor.Tools.Courseplay.v2019;
 using CourseplayEditor.Tools.FarmSimulator;
-using CourseplayEditor.Tools.Tools.Extensions;
 using NUnit.Framework;
 
 namespace Courseplay.Tests.v2019

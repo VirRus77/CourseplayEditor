@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CourseEditor.Drawing\CourseEditor.Drawing.csproj" />
     <ProjectReference Include="..\CourseplayEditor.Tools\CourseplayEditor.Tools.csproj" />
   </ItemGroup>
 

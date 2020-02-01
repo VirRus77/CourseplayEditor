@@ -20,14 +20,19 @@ namespace CourseplayEditor.Tools.Courseplay.Data
             LoadTransform(ToCourse, TransformToCourse);
         }
 
+        public static Stream FromCoursePlay(Stream stream)
+        {
+            return TransformFromCourse.TransformToXmlStream(stream);
+        }
+
         public static Stream FromCoursePlay(XmlDocument xml)
         {
             return TransformFromCourse.TransformToXmlStream(xml);
         }
 
-        public static XmlDocument ToCoursePlay(XmlDocument xml)
+        public static Stream ToCoursePlay(XmlDocument xml)
         {
-            return TransformToCourse.TransformToXmlDocument(xml);
+            return TransformToCourse.TransformToXmlStream(xml);
         }
 
         private static void LoadTransform(string fileName, XslCompiledTransform xslCompiledTransform)
