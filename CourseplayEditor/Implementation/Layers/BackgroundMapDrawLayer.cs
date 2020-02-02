@@ -1,41 +1,40 @@
-﻿using System;
-using CourseEditor.Drawing.Contract;
+﻿using CourseEditor.Drawing.Implementation;
 using CourseEditor.Drawing.Tools;
 using SkiaSharp;
 
-namespace CourseplayEditor.Implementation
+namespace CourseplayEditor.Implementation.Layers
 {
     /// <summary>
     /// Слой для отображения картинки карты
     /// </summary>
-    public class BackgroundMapDrawLayer : IDrawLayer
+    public class BackgroundMapDrawLayer : BaseDrawLayer
     {
         private SKImage _skImage;
 
+        /// <inheritdoc />
         public BackgroundMapDrawLayer()
         {
+            IsVisible = true;
         }
 
-        public event EventHandler<EventArgs> Changed;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
         public void OpenImage(string filePath)
         {
             _skImage = DdsHelper.Load(filePath);
             RaiseChanged();
         }
 
-        public void Draw(SKCanvas canvas, SKRect drawRect)
+        /// <inheritdoc />
+        public override void Draw(SKCanvas canvas, SKRect drawRect)
         {
-            if (_skImage == null)
+            if (!IsVisible || _skImage == null)
             {
                 return;
             }
             canvas.DrawImage(_skImage, _skImage.Width / 2f * -1, _skImage.Width / 2f * -1);
-        }
-
-        private void RaiseChanged()
-        {
-            Changed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

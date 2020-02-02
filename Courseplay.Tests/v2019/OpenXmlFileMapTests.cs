@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using Core.Tools.Extensions;
+﻿using System.IO;
 using CourseplayEditor.Tools.FarmSimulator;
 using CourseplayEditor.Tools.FarmSimulator.v2019.Map;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml.Serialization;
 
 namespace CourseplayEditor.Tools.FarmSimulator.v2019.Map

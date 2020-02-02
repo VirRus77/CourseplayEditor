@@ -2,26 +2,27 @@
 using System.Linq;
 using CourseEditor.Drawing.Contract;
 using CourseplayEditor.Contracts;
-using CourseplayEditor.Tools.Courseplay.v2019;
-using I3DShapesTool.Lib.Model;
+using CourseplayEditor.Model;
 
-namespace CourseplayEditor.Implementation
+namespace CourseplayEditor.Implementation.Layers
 {
     /// <inheritdoc />
     public class CourseLayerManager : ICourseLayerManager
     {
         private readonly IDrawLayerManager _drawLayerManager;
         private readonly ICollection<IDrawLayer> _courseLayers;
-        private readonly ICollection<IDrawLayer> _mapSplines;
+        private readonly OperationLayer _operationLayer;
+        private ICollection<IDrawLayer> _mapSplines;
         private BackgroundMapDrawLayer _mapBackgroundLayer;
 
         /// <summary>
         /// Конструктор <inheritdoc cref="CourseLayerManager"/>
         /// </summary>
         /// <param name="drawLayerManager"></param>
-        public CourseLayerManager(IDrawLayerManager drawLayerManager)
+        public CourseLayerManager(IDrawLayerManager drawLayerManager, OperationLayer operationLayer)
         {
             _drawLayerManager = drawLayerManager;
+            _operationLayer = operationLayer;
             Initialize(_drawLayerManager);
             _courseLayers = new List<IDrawLayer>();
             _mapSplines = new List<IDrawLayer>();
@@ -29,6 +30,8 @@ namespace CourseplayEditor.Implementation
 
         private void Initialize(IDrawLayerManager drawLayerManager)
         {
+            var changed = drawLayerManager.BeginChanging();
+
             _mapBackgroundLayer = new BackgroundMapDrawLayer();
             if (drawLayerManager.Layers.Count == 0)
             {
@@ -38,10 +41,17 @@ namespace CourseplayEditor.Implementation
             {
                 drawLayerManager.InsertLayer(0, _mapBackgroundLayer);
             }
+            drawLayerManager.AddLayer(_operationLayer);
+
+            ReindexSystemLayers();
+
+            changed.Dispose();
         }
 
         public void AddCourses(in ICollection<Course> courses)
         {
+            var changed = _drawLayerManager.BeginChanging();
+
             _drawLayerManager.RemoveLayers(_courseLayers);
             _drawLayerManager.AddLayers(
                 courses.Select(
@@ -53,6 +63,10 @@ namespace CourseplayEditor.Implementation
                     }
                 )
             );
+
+            ReindexSystemLayers();
+
+            changed.Dispose();
         }
 
         public void AddBackgroundMap(in string fileName)
@@ -60,25 +74,49 @@ namespace CourseplayEditor.Implementation
             _mapBackgroundLayer.OpenImage(fileName);
         }
 
-        public void AddMapSplines(in IEnumerable<Spline> splines)
+        public void AddMapSplines(in IEnumerable<SplineMap> splines)
         {
+            var changed = _drawLayerManager.BeginChanging();
+
             var index = _drawLayerManager.IndexOf(_mapBackgroundLayer);
-            var layers = splines.Select(
-                spline =>
-                {
-                    var layer = new SplineDrawLayer();
-                    layer.Load(spline);
-                    return layer;
-                }
-            );
+            _mapSplines = splines
+                          .Select(
+                              spline =>
+                              {
+                                  var layer = new SplineDrawLayer();
+                                  layer.Load(spline);
+                                  return layer;
+                              }
+                          )
+                          .ToArray();
             if (_drawLayerManager.Layers.Count == index + 1)
             {
-                _drawLayerManager.AddLayers(layers);
+                _drawLayerManager.AddLayers(_mapSplines);
             }
             else
             {
-                _drawLayerManager.InsertLayers(index + 1, layers);
+                _drawLayerManager.InsertLayers(index + 1, _mapSplines);
             }
+
+            ReindexSystemLayers();
+
+            changed.Dispose();
+        }
+
+        private void ReindexSystemLayers()
+        {
+            var currentIndex = _drawLayerManager.IndexOf(_operationLayer);
+            if (currentIndex == _drawLayerManager.Layers.Count - 1)
+            {
+                return;
+            }
+
+            var changing = _drawLayerManager.BeginChanging();
+
+            _drawLayerManager.RemoveLayer(_operationLayer);
+            _drawLayerManager.AddLayer(_operationLayer);
+
+            changing.Dispose();
         }
     }
 }

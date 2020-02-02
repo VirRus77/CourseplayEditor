@@ -15,5 +15,7 @@ namespace CourseEditor.Drawing.Implementation
             canvas.DrawRect(new SKRect(-1,-1, 1, 1), new SKPaint(){Color = new SKColor(255, 0, 0) } );
             canvas.DrawCircle(new SKPoint(100,100), 2, new SKPaint(){Color = new SKColor(255, 0, 0) } );
         }
+
+        public bool IsVisible { get; set; }
     }
 }

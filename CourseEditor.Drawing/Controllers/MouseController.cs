@@ -55,6 +55,7 @@ namespace CourseEditor.Drawing.Controllers
         public MouseController(
             IMapSettingsController mapSettingsController,
             ICurrentPositionController currentPositionController,
+            ISelectableController selectableController,
             ILogger<MouseController> logger
         )
         {

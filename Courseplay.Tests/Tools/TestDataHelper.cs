@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using CourseplayEditor.Tools.FarmSimulator;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Courseplay.Tests.Tools
 {

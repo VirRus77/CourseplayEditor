@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using CourseEditor.Drawing.Contract;
+using CourseEditor.Drawing.Implementation;
+using CourseplayEditor.Model;
 using I3DShapesTool.Lib.Model;
 using SkiaSharp;
 
-namespace CourseplayEditor.Implementation
+namespace CourseplayEditor.Implementation.Layers
 {
-    public class SplineDrawLayer : IDrawLayer
+    public class SplineDrawLayer : BaseDrawLayer
     {
-        public void Load(Spline spline)
+        public void Load(SplineMap spline)
         {
             Spline = spline;
+            IsVisible = true;
             RaiseChanged();
         }
 
-        public Spline Spline { get; private set; }
+        public SplineMap Spline { get; private set; }
 
-        public event EventHandler<EventArgs> Changed;
-        public void Draw(SKCanvas canvas, SKRect drawRect)
+        public override void Draw(SKCanvas canvas, SKRect drawRect)
         {
             if (Spline == null || !Spline.Points.Any())
             {
@@ -45,14 +45,14 @@ namespace CourseplayEditor.Implementation
                           {
                               canvas.DrawLine(start, v, paint);
                               start = v;
-                          });
-
+                          }
+                      );
             }
         }
 
-        private void RaiseChanged()
+        private static SKPoint ToSkPoint(SKPoint3 point)
         {
-            Changed?.Invoke(this, EventArgs.Empty);
+            return new SKPoint(point.X, point.Y);
         }
 
         private static SKPoint ToSkPoint(I3DVector vector)
@@ -60,10 +60,11 @@ namespace CourseplayEditor.Implementation
             return new SKPoint(vector.X, vector.Z);
         }
 
-        private static ICollection<SKPoint> GeneratePoints(ICollection<I3DVector> splinePoints)
+        private static ICollection<SKPoint> GeneratePoints(IEnumerable<SKPoint3> splinePoints)
         {
-            return splinePoints.Select(vector => ToSkPoint(vector))
-                               .ToArray();
+            return splinePoints
+                   .Select(vector => ToSkPoint(vector))
+                   .ToArray();
         }
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Core.Tools.Extensions;
+using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Controllers;
 using CourseplayEditor.Contracts;
-using CourseplayEditor.Implementation;
+using CourseplayEditor.Model;
 using CourseplayEditor.Tools;
-using CourseplayEditor.Tools.Courseplay.v2019;
 using CourseplayEditor.Tools.FarmSimulator;
 using CourseplayEditor.Tools.FarmSimulator.v2019.Map;
 using I3DShapesTool.Lib.Container;
@@ -22,20 +23,28 @@ namespace CourseplayEditor.ViewModel
     public class MainWindowViewModel : ObservableObject
     {
         private readonly ICourseLayerManager _layerManager;
-        private BackgroundMapDrawLayer _mapBackground;
         private readonly ICourseFile _courseFile;
+        private readonly ISelectableController _selectableController;
         private ICollection<Course> _courses;
+        private ICollection<SplineMap> _splineMaps;
 
-        public MainWindowViewModel(IServiceProvider serviceProvider, ICourseLayerManager layerManager, ICourseFile courseFile)
+        public MainWindowViewModel(
+            IServiceProvider serviceProvider,
+            ICourseLayerManager layerManager,
+            ICourseFile courseFile,
+            ISelectableController selectableController
+        )
         {
             ServiceProvider = serviceProvider;
             _layerManager = layerManager;
             _courseFile = courseFile;
+            _selectableController = selectableController;
 
             OpenCommand = new RelayCommand(() => OpenCommandExecute());
             OpenMapCommand = new RelayCommand(() => OpenMapCommandExecute());
             AddMapSplinesCommand = new RelayCommand(() => AddMapSplinesCommandExecute());
 
+            // Manual
             serviceProvider.GetService<MouseController>();
         }
 
@@ -51,6 +60,18 @@ namespace CourseplayEditor.ViewModel
         {
             get => _courses;
             set => SetValue(ref _courses, value);
+        }
+
+        public ISelectable SelectedItem
+        {
+            get => _selectableController.Value.FirstOrDefault();
+            set => _selectableController.Select(value);
+        }
+
+        public ICollection<SplineMap> SplineMaps
+        {
+            get => _splineMaps;
+            set => SetValue(ref _splineMaps, value);
         }
 
         private void OpenCommandExecute()
@@ -70,7 +91,9 @@ namespace CourseplayEditor.ViewModel
 
             var fileName = fileOpenDialog.FileName;
             _courseFile.Open(fileName);
-            Courses = _courseFile.Courses;
+            Courses = _courseFile.Courses
+                                 .Select(course => new Course(course))
+                                 .ToArray();
             _layerManager.AddCourses(Courses);
             AddMapBackgroundByCourseFile(fileName);
             AddMapSplinesByCourseFile(fileName);
@@ -84,7 +107,7 @@ namespace CourseplayEditor.ViewModel
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Multiselect = false,
-                Filter = "Pda MAP DDS File|pda_map_H.dds.dds",
+                Filter = $"Pda MAP DDS File|{GameConstants.MapPdaFileName}",
             };
 
             if (fileOpenDialog.ShowDialog() != true)
@@ -105,7 +128,7 @@ namespace CourseplayEditor.ViewModel
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Multiselect = false,
-                Filter = "MAP Files|*.i3d.shapes",
+                Filter = $"MAP Files|*{GameConstants.SchapesFileExtension}",
             };
 
             if (fileOpenDialog.ShowDialog() != true)
@@ -142,7 +165,8 @@ namespace CourseplayEditor.ViewModel
                                        .ToArray();
 
             splines = TransformToMap(filePath, splines) ?? splines;
-            _layerManager.AddMapSplines(splines);
+            SplineMaps = splines.Select(v => new SplineMap(v)).ToArray();
+            _layerManager.AddMapSplines(SplineMaps);
         }
 
 

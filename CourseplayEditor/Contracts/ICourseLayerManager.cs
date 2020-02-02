@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using CourseplayEditor.Tools.Courseplay.v2019;
-using I3DShapesTool.Lib.Model;
+using CourseplayEditor.Model;
 
 namespace CourseplayEditor.Contracts
 {
@@ -18,6 +17,6 @@ namespace CourseplayEditor.Contracts
         /// <param name="fileName"></param>
         void AddBackgroundMap(in string fileName);
 
-        void AddMapSplines(in IEnumerable<Spline> splines);
+        void AddMapSplines(in IEnumerable<SplineMap> splines);
     }
 }

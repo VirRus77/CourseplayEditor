@@ -10,7 +10,7 @@ namespace CourseEditor.Drawing.Contract
     public interface IDrawLayerManager
     {
         /// <summary>
-        /// Союытие при изменении <inheritdoc cref="Layers"/> или <inheritdoc cref="IDrawLayer"/>
+        /// Событие при изменении <inheritdoc cref="Layers"/> или <inheritdoc cref="IDrawLayer"/>
         /// </summary>
         event EventHandler<EventArgs> Changed;
 
@@ -68,5 +68,11 @@ namespace CourseEditor.Drawing.Contract
         /// </summary>
         /// <param name="layer"><inheritdoc cref="IDrawLayer"/></param>
         int IndexOf([NotNull] in IDrawLayer layer);
+
+        /// <summary>
+        /// Начало измениния
+        /// </summary>
+        /// <returns>Объект после разрушения которого вызовится изменение</returns>
+        IDisposable BeginChanging();
     }
 }

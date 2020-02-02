@@ -27,6 +27,8 @@ namespace CourseEditor.Drawing.Implementation
             }
         }
 
+        public bool IsVisible { get; set; }
+
         private SKPoint GetPoint()
         {
             return new SKPoint((float) _rnd.Next(-1000, 1000), (float) _rnd.Next(-1000, 1000));

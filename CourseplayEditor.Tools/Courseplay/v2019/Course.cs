@@ -24,7 +24,7 @@ namespace CourseplayEditor.Tools.Courseplay.v2019
 
         [XmlAttribute("headlandDirectionCW")]
         [DefaultValue(false)]
-        public bool headlandDirectionCW { get; set; }
+        public bool HeadlandDirectionCW { get; set; }
 
         [XmlElement("waypoint")]
         public Waypoint[] Waypoints { get; set; } = new Waypoint[0];

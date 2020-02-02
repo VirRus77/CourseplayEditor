@@ -4,12 +4,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
+using CourseEditor.Drawing.Tools;
 
 namespace CourseEditor.Drawing.Implementation
 {
     /// <inheritdoc cref="IDrawLayerManager"/>
     public class DrawLayerManager : IDrawLayerManager
     {
+        private bool _changing = false;
         private readonly List<IDrawLayer> _layers;
 
         /// <summary>
@@ -74,6 +76,7 @@ namespace CourseEditor.Drawing.Implementation
             RaiseChanged();
         }
 
+        /// <inheritdoc />
         public void InsertLayers(in int index, [NotNull] in IEnumerable<IDrawLayer> layers)
         {
             if (index < 0 || index >= _layers.Count)
@@ -137,11 +140,35 @@ namespace CourseEditor.Drawing.Implementation
             return _layers.IndexOf(layer);
         }
 
+        /// <inheritdoc />
+        public IDisposable BeginChanging()
+        {
+            if (_changing)
+            {
+                return DisposeAction.Empty();
+            }
+
+            _changing = true;
+            
+            return new DisposeAction(
+                () =>
+                {
+                    _changing = false;
+                    RaiseChanged();
+                }
+            );
+        }
+
         /// <summary>
         /// Вызвать <see cref="Changed"/>
         /// </summary>
         protected void RaiseChanged()
         {
+            if (_changing)
+            {
+                return;
+            }
+
             Changed?.Invoke(this, EventArgs.Empty);
         }
 

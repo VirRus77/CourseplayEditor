@@ -24,5 +24,11 @@ namespace CourseEditor.Drawing.Contract
         /// </summary>
         /// <param name="value"><inheritdoc cref="Value"/></param>
         void SetValue(T value);
+
+        /// <summary>
+        /// Блокировать измененеия
+        /// </summary>
+        /// <returns></returns>
+        IDisposable BeginChanging();
     }
 }

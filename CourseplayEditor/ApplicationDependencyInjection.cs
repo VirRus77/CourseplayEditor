@@ -8,6 +8,7 @@ using CourseplayEditor.Configuration;
 using CourseplayEditor.Contracts;
 using CourseplayEditor.Implementation;
 using CourseplayEditor.Implementation.Control;
+using CourseplayEditor.Implementation.Layers;
 using CourseplayEditor.Tools;
 using CourseplayEditor.Tools.Extensions;
 using CourseplayEditor.View;
@@ -63,6 +64,7 @@ namespace CourseplayEditor
                         return manager;
                     }
                 )
+                .AddSingleton<OperationLayer>()
                 .AddSingleton<ICourseLayerManager, CourseLayerManager>()
                 .AddSingleton<MouseController>(
                     provider =>
@@ -73,6 +75,7 @@ namespace CourseplayEditor
                     }
                 )
                 .AddSingleton<ICurrentPositionController, CurrentPositionController>()
+                .AddSingleton<ISelectableController, SelectableController>()
                 .AddSingleton<IMapSettingsController, MapSettingsController>()
                 .AddSingleton<IDrawCurrentPosition, DrawCurrentPosition>();
 

@@ -45,5 +45,13 @@ namespace CourseplayEditor.Tools.Courseplay.v2019
         [XmlAttribute("unload")]
         [DefaultValue(0)]
         public int Unload { get; set; }
+
+        [XmlAttribute("generated")]
+        [DefaultValue(false)]
+        public bool Generated { get; set; }
+
+        [XmlAttribute("ridgemarker")]
+        [DefaultValue(0)]
+        public int Ridgemarker { get; set; }
     }
 }

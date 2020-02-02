@@ -18,6 +18,11 @@ namespace CourseEditor.Drawing.Contract
         /// </summary>
         /// <param name="canvas">Холст отрисовки</param>
         /// <param name="drawRect">Область отрисовки</param>
-        public void Draw(SKCanvas canvas, SKRect drawRect);
+        void Draw(SKCanvas canvas, SKRect drawRect);
+
+        /// <summary>
+        /// Видимость слоя
+        /// </summary>
+        bool IsVisible { get; set; }
     }
 }
