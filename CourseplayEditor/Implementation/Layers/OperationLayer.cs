@@ -48,12 +48,15 @@ namespace CourseplayEditor.Implementation.Layers
         {
             values
                 .OfType<SplineMap>()
+                .Where(v => v.Visible)
                 .ForEach(v => Draw(canvas, drawRect, paint, v));
             values
                 .OfType<Course>()
+                .Where(v => v.Visible)
                 .ForEach(v => Draw(canvas, drawRect, paint, v));
             values
                 .OfType<Waypoint>()
+                .Where(v=>v.Course.Visible)
                 .ForEach(v => Draw(canvas, drawRect, paint, v));
         }
 

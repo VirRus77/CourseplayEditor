@@ -36,8 +36,9 @@ namespace CourseEditor.Drawing.Implementation
                 throw new ArgumentNullException(nameof(layer));
             }
 
-            _layers.Add(layer);
             layer.Changed += LayerOnChanged;
+            _layers.Add(layer);
+
             RaiseChanged();
         }
 
@@ -56,6 +57,7 @@ namespace CourseEditor.Drawing.Implementation
                     _layers.Add(layer);
                 }
             );
+
             RaiseChanged();
         }
 
@@ -72,7 +74,9 @@ namespace CourseEditor.Drawing.Implementation
                 throw new ArgumentNullException(nameof(layer));
             }
 
+            layer.Changed += LayerOnChanged;
             _layers.Insert(index, layer);
+
             RaiseChanged();
         }
 
@@ -90,7 +94,13 @@ namespace CourseEditor.Drawing.Implementation
             }
 
             var localIndex = index;
-            layers.ForEach((layer, i) => _layers.Insert(localIndex + i, layer));
+            layers.ForEach((layer, i) =>
+                {
+                    layer.Changed += LayerOnChanged;
+                    _layers.Insert(localIndex + i, layer);
+                }
+            );
+
             RaiseChanged();
         }
 

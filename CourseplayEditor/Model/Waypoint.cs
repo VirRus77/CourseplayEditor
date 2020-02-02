@@ -11,8 +11,9 @@ namespace CourseplayEditor.Model
             Point = new SKPoint3();
         }
 
-        public Waypoint([NotNull] Tools.Courseplay.v2019.Waypoint waypoint)
+        public Waypoint([NotNull] Course course, [NotNull] Tools.Courseplay.v2019.Waypoint waypoint)
         {
+            Course = course ?? throw new ArgumentNullException(nameof(course));
             if (waypoint == null)
             {
                 throw new ArgumentNullException(nameof(waypoint));
@@ -42,6 +43,9 @@ namespace CourseplayEditor.Model
         public bool Generated { get; set; }
 
         public int Ridgemarker { get; set; }
+
+        [NotNull]
+        public Course Course { get; }
 
         public void Load([NotNull] Tools.Courseplay.v2019.Waypoint waypoint)
         {

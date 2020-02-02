@@ -11,12 +11,15 @@ namespace CourseplayEditor.Model
         private float _workWidth;
         private int _numHeadlandLanes;
         private bool _headlandDirectionCw;
+        private bool _visible;
 
         public Course()
         {
+            _visible = true;
         }
 
         public Course(in Tools.Courseplay.v2019.Course course)
+            : this()
         {
             Load(course);
         }
@@ -47,6 +50,12 @@ namespace CourseplayEditor.Model
 
         public Waypoint[] Waypoints { get; set; } = new Waypoint[0];
 
+        public bool Visible
+        {
+            get => _visible;
+            set => SetValue(ref _visible, value);
+        }
+
         public void Load([NotNull] Tools.Courseplay.v2019.Course course)
         {
             if (course == null)
@@ -58,7 +67,7 @@ namespace CourseplayEditor.Model
             WorkWidth = course.WorkWidth;
             NumHeadlandLanes = course.NumHeadlandLanes;
             HeadlandDirectionCW = course.HeadlandDirectionCW;
-            Waypoints = course.Waypoints.Select(v => new Waypoint(v)).ToArray();
+            Waypoints = course.Waypoints.Select(v => new Waypoint(this, v)).ToArray();
         }
     }
 }

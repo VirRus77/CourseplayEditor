@@ -11,9 +11,11 @@ namespace CourseplayEditor.Model
     public class SplineMap : BaseSelectableModel
     {
         private List<SKPoint3> _points;
+        private bool _visible;
 
         public SplineMap()
         {
+            _visible = true;
             _points = new List<SKPoint3>();
         }
 
@@ -37,6 +39,12 @@ namespace CourseplayEditor.Model
         public string Name { get; private set; }
 
         public IReadOnlyCollection<SKPoint3> Points => _points;
+
+        public bool Visible
+        {
+            get => _visible;
+            set => SetValue(ref _visible, value);
+        }
 
         private void Load([NotNull] in Spline spline)
         {

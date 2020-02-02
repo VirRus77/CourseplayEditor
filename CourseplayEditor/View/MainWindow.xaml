@@ -30,7 +30,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="3">
             <Button
-                Content="Open"
+                Content="Open courseplay file"
                 Command="{Binding Path=OpenCommand}" />
             <Button
                 Content="Open map"
@@ -56,7 +56,8 @@
             Grid.Column="1"
             ResizeBehavior="PreviousAndNext"
             ResizeDirection="Columns"
-            Width="6" />
+            Width="6"
+            VerticalAlignment="Stretch" />
         <Grid Grid.Row="1"
               Grid.Column="2">
             <Grid.RowDefinitions>
@@ -72,7 +73,20 @@
                 </b:Interaction.Behaviors>
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Path=Waypoints}">
-                        <TextBlock Text="{Binding Path=Name}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox
+                                Grid.Column="0"
+                                IsChecked="{Binding Path=Visible, Mode=TwoWay}"
+                                Margin="5" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="{Binding Path=Name}"
+                                Margin="0,5,5,5" />
+                        </Grid>
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock>
@@ -89,17 +103,30 @@
                 Grid.Row="1"
                 ResizeBehavior="PreviousAndNext"
                 ResizeDirection="Rows"
-                Height="6" />
+                Height="6"
+                HorizontalAlignment="Stretch" />
             <ListView
                 Grid.Row="2"
                 ItemsSource="{Binding Path=SplineMaps}"
                 SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock>
-                            <Run Text="{Binding Path=Id, Mode=OneWay}" />
-                            <Run Text="{Binding Path=Name, Mode=OneWay}" />
-                        </TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox
+                                Grid.Column="0"
+                                IsChecked="{Binding Path=Visible, Mode=TwoWay}"
+                                Margin="5" />
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="0,5,5,5">
+                                <Run Text="{Binding Path=Id, Mode=OneWay}" />
+                                <Run Text="{Binding Path=Name, Mode=OneWay}" />
+                            </TextBlock>
+                        </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

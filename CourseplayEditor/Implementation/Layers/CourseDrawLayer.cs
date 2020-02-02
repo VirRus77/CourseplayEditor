@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CourseEditor.Drawing.Implementation;
 using CourseplayEditor.Model;
@@ -6,7 +7,7 @@ using SkiaSharp;
 
 namespace CourseplayEditor.Implementation.Layers
 {
-    public class CourseDrawLayer : BaseDrawLayer
+    public class CourseDrawLayer : BaseDrawLayer, IDisposable
     {
         public CourseDrawLayer()
         {
@@ -20,13 +21,19 @@ namespace CourseplayEditor.Implementation.Layers
 
         public void Load(Course course)
         {
+            if (Course != null)
+            {
+                Course.Changed -= CourseOnChanged;
+            }
+
             Course = course;
+            Course.Changed += CourseOnChanged;
             RaiseChanged();
         }
 
         public override void Draw(SKCanvas canvas, SKRect drawRect)
         {
-            if (!IsVisible || Course == null || !Course.Waypoints.Any())
+            if (!IsVisible || Course == null || !Course.Waypoints.Any() || !Course.Visible)
             {
                 return;
             }
@@ -47,6 +54,11 @@ namespace CourseplayEditor.Implementation.Layers
             }
         }
 
+        private void CourseOnChanged(object? sender, EventArgs e)
+        {
+            RaiseChanged();
+        }
+
         private ICollection<SKPoint> GeneratePoints(Course course)
         {
             return course.Waypoints.Select(v => ToSkPoint(v)).ToArray();
@@ -55,6 +67,15 @@ namespace CourseplayEditor.Implementation.Layers
         private static SKPoint ToSkPoint(Waypoint firstPoint)
         {
             return new SKPoint(firstPoint.Point.X, firstPoint.Point.Y);
+        }
+
+        public void Dispose()
+        {
+            if (Course != null)
+            {
+                Course.Changed -= CourseOnChanged;
+
+            }
         }
     }
 }

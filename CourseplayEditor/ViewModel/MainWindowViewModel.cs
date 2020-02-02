@@ -10,6 +10,7 @@ using CourseEditor.Drawing.Controllers;
 using CourseplayEditor.Contracts;
 using CourseplayEditor.Model;
 using CourseplayEditor.Tools;
+using CourseplayEditor.Tools.Courseplay;
 using CourseplayEditor.Tools.FarmSimulator;
 using CourseplayEditor.Tools.FarmSimulator.v2019.Map;
 using I3DShapesTool.Lib.Container;
@@ -78,12 +79,13 @@ namespace CourseplayEditor.ViewModel
         {
             var fileOpenDialog = new OpenFileDialog
             {
-                InitialDirectory = GamePaths.GetSavesPath(FarmSimulatorVersion.FarmingSimulator2019),
+                InitialDirectory = CourseplayPaths.GetCourseplayDirectory(FarmSimulatorVersion.FarmingSimulator2019),
                 CheckFileExists = true,
                 CheckPathExists = true,
                 Multiselect = false,
+                Filter = $"Courseplay Manager|{CourseplayConstants.CourseplayFileName}|Xml|*.xml"
             };
-
+            
             if (fileOpenDialog.ShowDialog() != true)
             {
                 return;

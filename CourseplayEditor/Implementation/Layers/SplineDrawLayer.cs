@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CourseEditor.Drawing.Implementation;
 using CourseplayEditor.Model;
@@ -7,12 +8,21 @@ using SkiaSharp;
 
 namespace CourseplayEditor.Implementation.Layers
 {
-    public class SplineDrawLayer : BaseDrawLayer
+    public class SplineDrawLayer : BaseDrawLayer, IDisposable
     {
+        public SplineDrawLayer()
+        {
+            IsVisible = true;
+        }
+
         public void Load(SplineMap spline)
         {
+            if (Spline != null)
+            {
+                Spline.Changed -= SplineOnChanged;
+            }
             Spline = spline;
-            IsVisible = true;
+            Spline.Changed += SplineOnChanged;
             RaiseChanged();
         }
 
@@ -20,7 +30,7 @@ namespace CourseplayEditor.Implementation.Layers
 
         public override void Draw(SKCanvas canvas, SKRect drawRect)
         {
-            if (Spline == null || !Spline.Points.Any())
+            if (Spline == null || !Spline.Points.Any() || !Spline.Visible)
             {
                 return;
             }
@@ -50,6 +60,11 @@ namespace CourseplayEditor.Implementation.Layers
             }
         }
 
+        private void SplineOnChanged(object? sender, EventArgs e)
+        {
+            RaiseChanged();
+        }
+
         private static SKPoint ToSkPoint(SKPoint3 point)
         {
             return new SKPoint(point.X, point.Y);
@@ -65,6 +80,14 @@ namespace CourseplayEditor.Implementation.Layers
             return splinePoints
                    .Select(vector => ToSkPoint(vector))
                    .ToArray();
+        }
+
+        public void Dispose()
+        {
+            if (Spline != null)
+            {
+                Spline.Changed -= SplineOnChanged;
+            }
         }
     }
 }

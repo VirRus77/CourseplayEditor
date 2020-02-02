@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
 using CourseplayEditor.Contracts;
 using CourseplayEditor.Model;
@@ -12,7 +13,7 @@ namespace CourseplayEditor.Implementation.Layers
         private readonly IDrawLayerManager _drawLayerManager;
         private readonly ICollection<IDrawLayer> _courseLayers;
         private readonly OperationLayer _operationLayer;
-        private ICollection<IDrawLayer> _mapSplines;
+        private readonly ICollection<IDrawLayer> _mapSplines;
         private BackgroundMapDrawLayer _mapBackgroundLayer;
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace CourseplayEditor.Implementation.Layers
             {
                 drawLayerManager.InsertLayer(0, _mapBackgroundLayer);
             }
+
             drawLayerManager.AddLayer(_operationLayer);
 
             ReindexSystemLayers();
@@ -53,8 +55,9 @@ namespace CourseplayEditor.Implementation.Layers
             var changed = _drawLayerManager.BeginChanging();
 
             _drawLayerManager.RemoveLayers(_courseLayers);
-            _drawLayerManager.AddLayers(
-                courses.Select(
+            _courseLayers.Clear();
+            courses
+                .Select(
                     course =>
                     {
                         var layer = new CourseDrawLayer();
@@ -62,7 +65,9 @@ namespace CourseplayEditor.Implementation.Layers
                         return layer;
                     }
                 )
-            );
+                .ForEach(courseLayer => _courseLayers.Add(courseLayer));
+
+            _drawLayerManager.AddLayers(_courseLayers);
 
             ReindexSystemLayers();
 
@@ -79,16 +84,20 @@ namespace CourseplayEditor.Implementation.Layers
             var changed = _drawLayerManager.BeginChanging();
 
             var index = _drawLayerManager.IndexOf(_mapBackgroundLayer);
-            _mapSplines = splines
-                          .Select(
-                              spline =>
-                              {
-                                  var layer = new SplineDrawLayer();
-                                  layer.Load(spline);
-                                  return layer;
-                              }
-                          )
-                          .ToArray();
+
+            _drawLayerManager.RemoveLayers(_mapSplines);
+            _mapSplines.Clear();
+            splines
+                .Select(
+                    spline =>
+                    {
+                        var layer = new SplineDrawLayer();
+                        layer.Load(spline);
+                        return layer;
+                    }
+                )
+                .ForEach(v => _mapSplines.Add(v));
+
             if (_drawLayerManager.Layers.Count == index + 1)
             {
                 _drawLayerManager.AddLayers(_mapSplines);
