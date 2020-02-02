@@ -20,7 +20,7 @@
             </xsl:variable>
             <xsl:element name="{$name}">
               <xsl:attribute name="pos">
-                <xsl:value-of select="concat(@pointX,' ',@pointY, ' ', @pointZ)"/>
+                <xsl:value-of select="concat(@pointX,' ',@pointZ, ' ', @pointY)"/>
               </xsl:attribute>
               <xsl:apply-templates select="@*[name() != 'pointX' and name() != 'pointY' and name() != 'pointZ']|node()" />
             </xsl:element>

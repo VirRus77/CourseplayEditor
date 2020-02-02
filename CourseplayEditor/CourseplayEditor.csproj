@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
@@ -30,8 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core\Core.csproj" />
     <ProjectReference Include="..\CourseEditor.Drawing\CourseEditor.Drawing.csproj" />
     <ProjectReference Include="..\CourseplayEditor.Tools\CourseplayEditor.Tools.csproj" />
+    <ProjectReference Include="..\I3DShapesTool\I3DShapesTool.Lib\I3DShapesTool.Lib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

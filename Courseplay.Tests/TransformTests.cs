@@ -2,11 +2,12 @@
 using System.Linq;
 using CourseEditor.Drawing.Controllers.Implementation;
 using CourseEditor.Drawing.Tools;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
 namespace Courseplay.Tests
 {
+    [TestClass]
     public class TransformTests
     {
         private readonly static ICollection<(MapSettings MapSettings, SKPoint ControlPoint, SKPoint Answer)> TestToMapPointData = new[]
@@ -27,7 +28,7 @@ namespace Courseplay.Tests
             (new MapSettings(new SKPoint(-50,-25),2f), new SKPoint(50, 100), new SKPoint(100/2f,125/2f)),
         };
 
-        [Test]
+        [TestMethod]
         public void TestToMap()
         {
             TestToMapPointData
@@ -35,7 +36,7 @@ namespace Courseplay.Tests
                 .ForEach(v => AssertTestDataToMap(v));
         }
 
-        [Test]
+        [TestMethod]
         public void TestToControl()
         {
             TestToControlPointData

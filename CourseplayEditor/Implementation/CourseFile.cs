@@ -17,7 +17,13 @@ namespace CourseplayEditor.Implementation
             var path = Path.GetDirectoryName(fileName);
             Courses = courseManager
                       .SaveSlots
-                      .Select(v => OpenCourse(Path.Combine(path, v.FileName)))
+                      .Select(v =>
+                          {
+                              var course = OpenCourse(Path.Combine(path, v.FileName));
+                              course.Name = v.Name;
+                              return course;
+                          }
+                      )
                       .ToArray();
         }
 

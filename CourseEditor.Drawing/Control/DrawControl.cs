@@ -41,6 +41,11 @@ namespace CourseEditor.Drawing.Control
             SnapsToDevicePixels = true;
         }
 
+        /// <summary>
+        /// Конструктор <inheritdoc cref="DrawControl"/>
+        /// </summary>
+        /// <param name="mapSettings"><inheritdoc cref="IMapSettingsController"/></param>
+        /// <param name="layerManager"><inheritdoc cref="IDrawLayerManager"/></param>
         public DrawControl([NotNull]IMapSettingsController mapSettings, [NotNull]IDrawLayerManager layerManager)
             : this()
         {
@@ -49,16 +54,6 @@ namespace CourseEditor.Drawing.Control
 
             _mapSettings.Changed += MapSettingsOnChanged;
             _layerManager.Changed += LayerManagerOnChanged;
-        }
-
-        private void LayerManagerOnChanged(object? sender, EventArgs e)
-        {
-            InvalidateVisual();
-        }
-
-        private void MapSettingsOnChanged(object? sender, ValueEventArgs<MapSettings> e)
-        {
-            InvalidateVisual();
         }
 
         /// <inheritdoc />
@@ -115,9 +110,19 @@ namespace CourseEditor.Drawing.Control
                          .ForEach(v => v.Draw(canvas, drawRect));
         }
 
-        private WriteableBitmap CreateImage(int width, int height)
+        private static WriteableBitmap CreateImage(int width, int height)
         {
             return new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, BitmapPalettes.Halftone256Transparent);
+        }
+
+        private void LayerManagerOnChanged(object? sender, EventArgs e)
+        {
+            InvalidateVisual();
+        }
+
+        private void MapSettingsOnChanged(object? sender, ValueEventArgs<MapSettings> e)
+        {
+            InvalidateVisual();
         }
     }
 }

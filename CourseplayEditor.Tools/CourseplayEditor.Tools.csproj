@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
@@ -16,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FarmSimulator\v2019\" />
     <Folder Include="FarmSimulator\v2019\Save\" />
   </ItemGroup>
 

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Controllers.Implementation;
 using CourseEditor.Drawing.Tools;
-using CourseEditor.Drawing.Tools.Extensions;
 using SkiaSharp;
 
 namespace CourseEditor.Drawing.Implementation

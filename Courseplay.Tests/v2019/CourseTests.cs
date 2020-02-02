@@ -5,15 +5,16 @@ using Courseplay.Tests.Tools;
 using CourseplayEditor.Tools.Courseplay.Data;
 using CourseplayEditor.Tools.Courseplay.v2019;
 using CourseplayEditor.Tools.FarmSimulator;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Courseplay.Tests.v2019
 {
+    [TestClass]
     public class CourseTests
     {
         private const string TestFileName = "courseStorage0003.xml";
 
-        [Test]
+        [TestMethod]
         public void ParseTest()
         {
             var serializer = Course.Serializer;
@@ -35,8 +36,8 @@ namespace Courseplay.Tests.v2019
                 throw;
             }
 
-            Assert.NotNull(course, "course != null");
-            Assert.NotNull(course.Waypoints);
+            Assert.IsNotNull(course, "course != null");
+            Assert.IsNotNull(course.Waypoints);
             Assert.AreEqual(course.Waypoints.Length, 77);
             AssertWaypoint(
                 course.Waypoints[14],

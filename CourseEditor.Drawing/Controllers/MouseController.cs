@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Input;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Tools;
-using CourseEditor.Drawing.Tools.Extensions;
 using Microsoft.Extensions.Logging;
 using SkiaSharp;
 

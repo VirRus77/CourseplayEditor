@@ -17,6 +17,7 @@ namespace CourseplayEditor.Tools.Steam
             "SOFTWARE\\Wow6432Node\\Valve\\",
             "SOFTWARE\\VALVE\\"
         };
+
         private static readonly ICollection<string> SteamGameDirectories = new List<string>();
 
         static SteamHelper()
@@ -28,16 +29,18 @@ namespace CourseplayEditor.Tools.Steam
         {
             SteamGameDirectories.Clear();
             RegistryKeys.Select(v => Registry.LocalMachine.OpenSubKey(v))
-                .Where(registryKey => registryKey != null)
-                .SelectMany(registryKey =>
-                {
-                    using (registryKey)
-                    {
-                        return GetDirectories(registryKey).ToArray();
-                    }
-                })
-                .ToList()
-                .ForEach(directoryName => SteamGameDirectories.Add(directoryName));
+                        .Where(registryKey => registryKey != null)
+                        .SelectMany(
+                            registryKey =>
+                            {
+                                using (registryKey)
+                                {
+                                    return GetDirectories(registryKey).ToArray();
+                                }
+                            }
+                        )
+                        .ToList()
+                        .ForEach(directoryName => SteamGameDirectories.Add(directoryName));
         }
 
         private static IEnumerable<string> GetDirectories(RegistryKey registryKey)
@@ -55,7 +58,11 @@ namespace CourseplayEditor.Tools.Steam
                     foreach (var item in configLines)
                     {
                         var match = Regex.Match(item, driveRegex);
-                        if (item == string.Empty || !match.Success) continue;
+                        if (item == string.Empty || !match.Success)
+                        {
+                            continue;
+                        }
+
                         var matched = match.ToString();
                         var item2 = item.Substring(item.IndexOf(matched, StringComparison.Ordinal));
                         item2 = item2.Replace("\\\\", "\\");
@@ -70,8 +77,9 @@ namespace CourseplayEditor.Tools.Steam
 
         public static string GetGameDirectory(string gameFolderName)
         {
-            return SteamGameDirectories.Select(v => Path.Combine(v, gameFolderName))
-                .FirstOrDefault(v => Directory.Exists(v));
+            return SteamGameDirectories
+                   .Select(v => Path.Combine(v, gameFolderName))
+                   .FirstOrDefault(v => Directory.Exists(v));
         }
     }
 }

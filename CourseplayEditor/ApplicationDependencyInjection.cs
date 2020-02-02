@@ -3,13 +3,9 @@ using CourseEditor.Drawing;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Control;
 using CourseEditor.Drawing.Controllers;
-using CourseEditor.Drawing.Controllers.Contract;
-using CourseEditor.Drawing.Controllers.Implementation;
 using CourseEditor.Drawing.Implementation;
 using CourseplayEditor.Configuration;
 using CourseplayEditor.Contracts;
-using CourseplayEditor.Controls;
-using CourseplayEditor.Controls.Drawing;
 using CourseplayEditor.Implementation;
 using CourseplayEditor.Implementation.Control;
 using CourseplayEditor.Tools;
@@ -19,7 +15,6 @@ using CourseplayEditor.ViewModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ScaleController = CourseEditor.Drawing.Controllers.Implementation.ScaleController;
 
 namespace CourseplayEditor
 {
@@ -64,10 +59,11 @@ namespace CourseplayEditor
                     provider =>
                     {
                         var manager = new DrawLayerManager();
-                        manager.AddLayer(new TestDrawLayer());
+                        //manager.AddLayer(new TestDrawLayer());
                         return manager;
                     }
                 )
+                .AddSingleton<ICourseLayerManager, CourseLayerManager>()
                 .AddSingleton<MouseController>(
                     provider =>
                     {
@@ -78,10 +74,7 @@ namespace CourseplayEditor
                 )
                 .AddSingleton<ICurrentPositionController, CurrentPositionController>()
                 .AddSingleton<IMapSettingsController, MapSettingsController>()
-                .AddSingleton<IDrawCurrentPosition, DrawCurrentPosition>()
-                .AddSingleton<IOffsetController, OffsetController>()
-                .AddSingleton<IScaleController, ScaleController>()
-                .AddSingleton<IParametersController, ParametersController>();
+                .AddSingleton<IDrawCurrentPosition, DrawCurrentPosition>();
 
             serviceCollection
                 .AddSingleton<ICourseFile, CourseFile>();

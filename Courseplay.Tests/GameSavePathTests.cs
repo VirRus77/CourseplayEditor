@@ -1,18 +1,19 @@
 using System.IO;
 using CourseplayEditor.Tools.FarmSimulator;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Courseplay.Tests
 {
+    [TestClass]
     public class GameSavePathTests
     {
-        [SetUp]
+        [TestInitialize]
         public void Setup()
         {
         }
 
-        [Test]
-        public void GetGameSavePathTest([Values]FarmSimulatorVersion version)
+        [TestMethod]
+        public void GetGameSavePathTest(FarmSimulatorVersion version)
         {
             var path = GamePaths.GetSavesPath(version);
             if (!Directory.Exists(path))

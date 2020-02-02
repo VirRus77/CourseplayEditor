@@ -7,6 +7,7 @@
         xmlns:controls="clr-namespace:CourseplayEditor.Controls"
         xmlns:drawContracts="clr-namespace:CourseEditor.Drawing;assembly=CourseEditor.Drawing"
         xmlns:contracts="clr-namespace:CourseplayEditor.Contracts"
+        xmlns:v2019="clr-namespace:CourseplayEditor.Tools.Courseplay.v2019;assembly=CourseplayEditor.Tools"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type={x:Type viewModel:MainWindowViewModel}}"
         Title="MainWindow"
@@ -29,6 +30,12 @@
             <Button
                 Content="Open"
                 Command="{Binding Path=OpenCommand}" />
+            <Button
+                Content="Open map"
+                Command="{Binding Path=OpenMapCommand}" />
+            <Button
+                Content="Open map splines"
+                Command="{Binding Path=AddMapSplinesCommand}" />
         </ToolBar>
         <Grid
             Grid.Row="1"
@@ -48,9 +55,24 @@
             ResizeBehavior="PreviousAndNext"
             ResizeDirection="Columns"
             Width="6" />
-        <ListView
+        <TreeView
             Grid.Row="1"
             Grid.Column="3"
-            ItemsSource="{Binding Path=Courses}" />
+            ItemsSource="{Binding Path=Courses}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Waypoints}">
+                    <TextBlock Text="{Binding Path=Name}" />
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Path=(v2019:Waypoint.PointX)}" />,
+                                <Run Text="{Binding Path=(v2019:Waypoint.PointY)}" />,
+                                <Run Text="{Binding Path=(v2019:Waypoint.PointZ)}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
     </Grid>
 </Window>

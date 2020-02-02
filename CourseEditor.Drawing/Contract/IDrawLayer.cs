@@ -8,6 +8,9 @@ namespace CourseEditor.Drawing.Contract
     /// </summary>
     public interface IDrawLayer
     {
+        /// <summary>
+        /// <inheritdoc cref="IDrawLayer"/> изменился
+        /// </summary>
         event EventHandler<EventArgs> Changed;
 
         /// <summary>

@@ -2,15 +2,16 @@
 using Courseplay.Tests.Tools;
 using CourseplayEditor.Tools.Courseplay.v2019;
 using CourseplayEditor.Tools.FarmSimulator;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Courseplay.Tests.v2019
 {
+    [TestClass]
     public class CourseManagerTests
     {
         private const string TestFileName = "courseManager.xml";
 
-        [Test]
+        [TestMethod]
         public void ParseTest()
         {
             var serializer = CourseManager.Serializer;
@@ -22,8 +23,8 @@ namespace Courseplay.Tests.v2019
                 courseManager = serializer.Deserialize(stream) as CourseManager;
             }
 
-            Assert.NotNull(courseManager, "courseManager != null");
-            Assert.NotNull(courseManager.SaveSlots);
+            Assert.IsNotNull(courseManager, "courseManager != null");
+            Assert.IsNotNull(courseManager.SaveSlots);
             Assert.AreEqual(courseManager.SaveSlots.Length, 4);
             AssertSaveSlot(
                 courseManager.SaveSlots[0],

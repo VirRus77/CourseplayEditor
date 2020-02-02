@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
 
 namespace CourseEditor.Drawing.Implementation
@@ -25,7 +27,7 @@ namespace CourseEditor.Drawing.Implementation
         public IReadOnlyCollection<IDrawLayer> Layers => _layers;
 
         /// <inheritdoc />
-        public void AddLayer(in IDrawLayer layer)
+        public void AddLayer([NotNull] in IDrawLayer layer)
         {
             if (layer == null)
             {
@@ -38,18 +40,54 @@ namespace CourseEditor.Drawing.Implementation
         }
 
         /// <inheritdoc />
-        public void InsertLayer(in int index, [NotNull]in IDrawLayer layer)
+        public void AddLayers([NotNull] in IEnumerable<IDrawLayer> layers)
+        {
+            if (!layers.Any())
+            {
+                return;
+            }
+
+            layers.ForEach(
+                layer =>
+                {
+                    layer.Changed += LayerOnChanged;
+                    _layers.Add(layer);
+                }
+            );
+            RaiseChanged();
+        }
+
+        /// <inheritdoc />
+        public void InsertLayer(in int index, [NotNull] in IDrawLayer layer)
         {
             if (index < 0 || index >= _layers.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
+
             if (layer == null)
             {
                 throw new ArgumentNullException(nameof(layer));
             }
 
             _layers.Insert(index, layer);
+            RaiseChanged();
+        }
+
+        public void InsertLayers(in int index, [NotNull] in IEnumerable<IDrawLayer> layers)
+        {
+            if (index < 0 || index >= _layers.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (layers == null)
+            {
+                throw new ArgumentNullException(nameof(layers));
+            }
+
+            var localIndex = index;
+            layers.ForEach((layer, i) => _layers.Insert(localIndex + i, layer));
             RaiseChanged();
         }
 
@@ -65,6 +103,38 @@ namespace CourseEditor.Drawing.Implementation
             layer.Changed -= LayerOnChanged;
             _layers.RemoveAt(index);
             RaiseChanged();
+        }
+
+        /// <inheritdoc />
+        public void RemoveLayer([NotNull] in IDrawLayer layer)
+        {
+            layer.Changed -= LayerOnChanged;
+            _layers.Remove(layer);
+            RaiseChanged();
+        }
+
+        /// <inheritdoc />
+        public void RemoveLayers([NotNull] in IEnumerable<IDrawLayer> layers)
+        {
+            if (!layers.Any())
+            {
+                return;
+            }
+
+            layers.ForEach(
+                layer =>
+                {
+                    layer.Changed -= LayerOnChanged;
+                    _layers.Remove(layer);
+                }
+            );
+            RaiseChanged();
+        }
+
+        /// <inheritdoc />
+        public int IndexOf([NotNull] in IDrawLayer layer)
+        {
+            return _layers.IndexOf(layer);
         }
 
         /// <summary>

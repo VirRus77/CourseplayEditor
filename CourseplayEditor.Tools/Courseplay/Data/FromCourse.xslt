@@ -14,10 +14,10 @@
           <xsl:attribute name="pointX">
             <xsl:value-of select="substring-before(@pos, ' ')"/>
           </xsl:attribute>
-          <xsl:attribute name="pointY">
+          <xsl:attribute name="pointZ">
             <xsl:value-of select="substring-before(substring-after(@pos, ' '), ' ')"/>
           </xsl:attribute>
-          <xsl:attribute name="pointZ">
+          <xsl:attribute name="pointY">
             <xsl:value-of select="substring-after(substring-after(@pos, ' '), ' ')"/>
           </xsl:attribute>
           <!--

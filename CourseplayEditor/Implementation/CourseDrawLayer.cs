@@ -9,85 +9,66 @@ namespace CourseplayEditor.Implementation
 {
     public class CourseDrawLayer : IDrawLayer
     {
-        private readonly ICollection<Course> _courses;
-        private ICollection<SKPath> _path;
-
-        public CourseDrawLayer(ICollection<Course> courses)
+        public CourseDrawLayer()
         {
-            _courses = courses;
         }
+
+        public void Load(Course course)
+        {
+            Course = course;
+            RaiseChanged();
+        }
+
+        public Course Course { get; set; }
 
         public event EventHandler<EventArgs> Changed;
 
-        public void Draw(SKCanvas canvas, SKRect drawRect)
+        void IDrawLayer.Draw(SKCanvas canvas, SKRect drawRect)
         {
-            _path = _path ?? GeneratePath(_courses);
-            using (SKPaint paint = new SKPaint
+            if (Course == null || !Course.Waypoints.Any())
+            {
+                return;
+            }
+
+            using (var paint = new SKPaint
             {
                 Color = new SKColor(255, 0, 0)
             })
             {
-                foreach (var course in _courses)
+
+                if (Course.Waypoints.Length == 1)
                 {
-                    if (course.Waypoints.Length < 2)
-                    {
-                        break;
-                    }
-
-                    var points = course.Waypoints.Select(v => ToSkPoint(v));
-                    var start = points.First();
-                    points.Skip(1)
-                          .ToList()
-                          .ForEach(
-                              v =>
-                              {
-                                  canvas.DrawLine(start, v, paint);
-                                  start = v;
-                              });
+                    canvas.DrawCircle(ToSkPoint(Course.Waypoints.Single()), 2f, paint);
+                    return;
                 }
-                //_path
-                //    .ToList()
-                //    .ForEach(v => canvas.DrawPath(v, paint));
+
+                var points = GeneratePoints(Course);
+                var start = points.First();
+                points.Skip(1)
+                      .ToList()
+                      .ForEach(
+                          v =>
+                          {
+                              canvas.DrawLine(start, v, paint);
+                              start = v;
+                          });
+
             }
         }
 
-        private ICollection<SKPath> GeneratePath(ICollection<Course> courses)
+        private ICollection<SKPoint> GeneratePoints(Course course)
         {
-            return courses.ToList()
-                          .Select(v => GeneratePath(v))
-                          .Where(v => v != null)
-                          .ToArray();
-        }
-
-        private SKPath GeneratePath(Course courses)
-        {
-            if (courses.Waypoints.Length == 0)
-            {
-                return null;
-            }
-
-            var path = new SKPath();
-            var firstPoint = courses.Waypoints.First();
-            var skPoint = ToSkPoint(firstPoint);
-            path.MoveTo(skPoint);
-            if (courses.Waypoints.Length == 1)
-            {
-                path.AddCircle(skPoint.X, skPoint.Y, 2);
-            }
-            else
-            {
-                courses.Waypoints
-                       .Skip(1)
-                       .ToList()
-                       .ForEach(v => path.LineTo(ToSkPoint(v)));
-            }
-
-            return path;
+            return course.Waypoints.Select(v => ToSkPoint(v)).ToArray();
         }
 
         private static SKPoint ToSkPoint(Waypoint firstPoint)
         {
-            return new SKPoint(firstPoint.PointX, firstPoint.PointZ);
+            return new SKPoint(firstPoint.PointX, firstPoint.PointY);
+        }
+
+        private void RaiseChanged()
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

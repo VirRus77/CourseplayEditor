@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using CourseplayEditor.Tools.FarmSimulator;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Courseplay.Tests.Tools
 {
     public static class TestDataHelper
     {
-        public static readonly string TestDataPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData");
+        public static readonly string TestDataPath = Path.Combine(Environment.CurrentDirectory, "TestData");
 
         public static readonly IDictionary<FarmSimulatorVersion, string> VersionToDictionaryTestData=new Dictionary<FarmSimulatorVersion, string>
         {

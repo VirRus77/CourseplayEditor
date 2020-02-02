@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace CourseEditor.Drawing.Contract
 {
@@ -16,7 +15,7 @@ namespace CourseEditor.Drawing.Contract
         event EventHandler<EventArgs> Changed;
 
         /// <summary>
-        /// Список слоев
+        /// Список слоёв
         /// </summary>
         IReadOnlyCollection<IDrawLayer> Layers { get; }
 
@@ -27,6 +26,12 @@ namespace CourseEditor.Drawing.Contract
         void AddLayer([NotNull] in IDrawLayer layer);
 
         /// <summary>
+        /// Добавить коллекцию <inheritdoc cref="IDrawLayer"/>
+        /// </summary>
+        /// <param name="layers">Перечисление <inheritdoc cref="IDrawLayer"/></param>
+        void AddLayers([NotNull] in IEnumerable<IDrawLayer> layers);
+
+        /// <summary>
         /// Вставить <inheritdoc cref="IDrawLayer"/> по позиции
         /// </summary>
         /// <param name="index">Индекс слоя в коллекции</param>
@@ -34,9 +39,34 @@ namespace CourseEditor.Drawing.Contract
         void InsertLayer(in int index, [NotNull] in IDrawLayer layer);
 
         /// <summary>
+        /// Вставить коллекцию <inheritdoc cref="IDrawLayer"/> по позиции
+        /// </summary>
+        /// <param name="index">Индекс слоя в коллекции</param>
+        /// <param name="layers">Перечисление <inheritdoc cref="IDrawLayer"/></param>
+        void InsertLayers(in int index, [NotNull] in IEnumerable<IDrawLayer> layers);
+
+        /// <summary>
         /// Удалить <inheritdoc cref="IDrawLayer"/> по позиции
         /// </summary>
         /// <param name="index">Индекс слоя в коллекции</param>
         void RemoveLayer(in int index);
+
+        /// <summary>
+        /// Удалить <inheritdoc cref="IDrawLayer"/> по значению
+        /// </summary>
+        /// <param name="layer"><inheritdoc cref="IDrawLayer"/></param>
+        void RemoveLayer([NotNull] in IDrawLayer layer);
+
+        /// <summary>
+        /// Удалить коллекцию <inheritdoc cref="IDrawLayer"/> по значениям
+        /// </summary>
+        /// <param name="layers">Перечисление <inheritdoc cref="IDrawLayer"/></param>
+        void RemoveLayers([NotNull] in IEnumerable<IDrawLayer> layers);
+
+        /// <summary>
+        /// Получить индекс <inheritdoc cref="IDrawLayer"/>
+        /// </summary>
+        /// <param name="layer"><inheritdoc cref="IDrawLayer"/></param>
+        int IndexOf([NotNull] in IDrawLayer layer);
     }
 }

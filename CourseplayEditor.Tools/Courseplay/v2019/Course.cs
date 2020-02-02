@@ -11,6 +11,9 @@ namespace CourseplayEditor.Tools.Courseplay.v2019
             new[] { typeof(Waypoint) }
         );
 
+        [XmlIgnore]
+        public string Name { get; set; }
+
         [XmlAttribute("workWidth")]
         [DefaultValue(0f)]
         public float WorkWidth { get; set; }
