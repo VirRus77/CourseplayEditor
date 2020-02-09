@@ -79,6 +79,8 @@ namespace CourseplayEditor
                 .AddSingleton<ISelectableController, SelectableController>()
                 .AddSingleton<IMapSettingsController, MapSettingsController>()
                 .AddSingleton<IMouseOperationManager, MouseOperationManager>()
+                .AddSingleton<SelectableObjects.IModelSelectableObjects, SelectableObjects>()
+                .AddSingleton<ISelectableObjects>(provider => provider.GetService<SelectableObjects.IModelSelectableObjects>())
                 .AddSingleton<IDrawCurrentPosition, DrawCurrentPosition>();
 
             serviceCollection

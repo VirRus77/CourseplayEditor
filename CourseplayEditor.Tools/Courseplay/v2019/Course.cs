@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace CourseplayEditor.Tools.Courseplay.v2019
 {
+    /// <summary>
+    /// Курсы.
+    /// </summary>
     [XmlRoot("course")]
     public class Course
     {

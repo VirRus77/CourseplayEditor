@@ -15,8 +15,6 @@ namespace CourseEditor.Drawing.Controllers.Mouse
         private readonly ILogger<MouseOperationManager> _logger;
         private readonly ICollection<IMouseOperation> _mouseOperations;
 
-        private IMouseOperation _currentMouseOperation;
-
         public MouseOperationManager(
             IServiceProvider serviceProvider,
             ICurrentPositionController currentPositionController,
@@ -28,70 +26,80 @@ namespace CourseEditor.Drawing.Controllers.Mouse
 
             _mouseOperations = new List<IMouseOperation>
             {
+                serviceProvider.CreateInstance<MouseOperationSelect>(),
                 serviceProvider.CreateInstance<MouseOperationMapMove>(),
                 serviceProvider.CreateInstance<MouseOperationMapZoom>(),
             };
         }
 
+        public IMouseOperation CurrentMouseOperation { get; private set; }
+
+        public void StopOperation()
+        {
+            CurrentMouseOperation?.Stop();
+        }
+
         public bool OnMouseMove(MouseEventArgs mouseEventArgs, SKPoint controlPosition)
         {
             _currentPositionController.SetValue(controlPosition);
-            _currentMouseOperation =
+            SetCurrentMouseOperation(
                 new[]
                     {
-                        _currentMouseOperation
+                        CurrentMouseOperation
                     }
                     .Concat(_mouseOperations)
                     .Where(v => v != null)
                     .Where(v => v.SupportMouseEvent.HasFlag(MouseEventType.Move))
-                    .SkipWhile(operation => operation.OnMouseMove(mouseEventArgs, controlPosition))
-                    .FirstOrDefault();
-            return _currentMouseOperation?.IsRun == true;
+                    .SkipWhile(operation => !operation.OnMouseMove(mouseEventArgs, controlPosition))
+                    .FirstOrDefault()
+            );
+
+            return CurrentMouseOperation?.IsRun == true;
         }
 
         public bool OnMouseUp(MouseButtonEventArgs mouseButtonEventArgs, SKPoint controlPosition)
         {
-            _currentMouseOperation =
+            CurrentMouseOperation =
                 new[]
                     {
-                        _currentMouseOperation
+                        CurrentMouseOperation
                     }
                     .Concat(_mouseOperations)
                     .Where(v => v != null)
                     .Where(v => v.SupportMouseEvent.HasFlag(MouseEventType.Up))
-                    .SkipWhile(operation => operation.OnMouseUp(mouseButtonEventArgs, controlPosition))
+                    .SkipWhile(operation => !operation.OnMouseUp(mouseButtonEventArgs, controlPosition))
                     .FirstOrDefault();
-            return _currentMouseOperation?.IsRun == true;
+            return CurrentMouseOperation?.IsRun == true;
         }
 
         public bool OnMouseDown(MouseButtonEventArgs mouseButtonEventArgs, SKPoint controlPosition)
         {
-            _currentMouseOperation =
+            CurrentMouseOperation =
                 new[]
                     {
-                        _currentMouseOperation
+                        CurrentMouseOperation
                     }
                     .Concat(_mouseOperations)
                     .Where(v => v != null)
                     .Where(v => v.SupportMouseEvent.HasFlag(MouseEventType.Down))
-                    .SkipWhile(operation => operation.OnMouseDown(mouseButtonEventArgs, controlPosition))
+                    .SkipWhile(operation => !operation.OnMouseDown(mouseButtonEventArgs, controlPosition))
                     .FirstOrDefault();
-            return _currentMouseOperation?.IsRun == true;
+            return CurrentMouseOperation?.IsRun == true;
         }
 
         public bool OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs, SKPoint controlPosition)
         {
-            _currentMouseOperation =
+            CurrentMouseOperation =
                 new[]
                     {
-                        _currentMouseOperation
+                        CurrentMouseOperation
                     }
                     .Concat(_mouseOperations)
                     .Where(v => v != null)
                     .Where(v => v.SupportMouseEvent.HasFlag(MouseEventType.Wheel))
-                    .SkipWhile(operation => operation.OnMouseWheel(mouseWheelEventArgs, controlPosition))
+                    .SkipWhile(operation => !operation.OnMouseWheel(mouseWheelEventArgs, controlPosition))
                     .FirstOrDefault();
-            return _currentMouseOperation?.IsRun == true;
+            return CurrentMouseOperation?.IsRun == true;
             //if (_currentMouseOperation != null)
             //{
             //    var onMouseWheel = _currentMouseOperation.OnMouseMove(mouseWheelEventArgs, controlPosition);
@@ -107,6 +115,16 @@ namespace CourseEditor.Drawing.Controllers.Mouse
             //                         .Where(v => v.SupportMouseEvent.HasFlag(MouseEventType.Wheel))
             //                         .FirstOrDefault(operation => operation.OnMouseWheel(mouseWheelEventArgs, controlPosition));
             //return _currentMouseOperation != null;
+        }
+
+        private void SetCurrentMouseOperation(IMouseOperation newMouseOperation)
+        {
+            if (CurrentMouseOperation != newMouseOperation)
+            {
+                CurrentMouseOperation?.Stop();
+            }
+
+            CurrentMouseOperation = newMouseOperation;
         }
     }
 }

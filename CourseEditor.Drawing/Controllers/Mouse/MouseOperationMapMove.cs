@@ -24,18 +24,19 @@ namespace CourseEditor.Drawing.Controllers.Mouse
 
         public override bool OnMouseDown(MouseButtonEventArgs mouseButtonEventArgs, SKPoint controlPosition)
         {
-            if (!mouseButtonEventArgs.ChangedButton.HasFlag(MouseButton.Middle) ||
+            if (mouseButtonEventArgs.ChangedButton != MouseButton.Middle ||
                 mouseButtonEventArgs.ButtonState != MouseButtonState.Pressed)
             {
                 return false;
             }
 
-            Start(controlPosition); 
+            Start(controlPosition);
             return true;
         }
 
         public override bool OnMouseMove(MouseEventArgs mouseEventArgs, SKPoint controlPosition)
         {
+            IsRun = IsRun && (mouseEventArgs.MiddleButton == MouseButtonState.Pressed);
             if (!IsRun)
             {
                 return false;
@@ -47,7 +48,8 @@ namespace CourseEditor.Drawing.Controllers.Mouse
 
         public override bool OnMouseUp(MouseButtonEventArgs mouseButtonEventArgs, SKPoint controlPosition)
         {
-            if (!IsRun || !mouseButtonEventArgs.ChangedButton.HasFlag(MouseButton.Middle) ||
+            if (!IsRun ||
+                mouseButtonEventArgs.ChangedButton != MouseButton.Middle ||
                 mouseButtonEventArgs.ButtonState != MouseButtonState.Released)
             {
                 return false;

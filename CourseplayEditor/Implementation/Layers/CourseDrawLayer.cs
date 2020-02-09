@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CourseEditor.Drawing.Implementation;
 using CourseplayEditor.Model;
+using CourseplayEditor.Tools.Extensions;
 using SkiaSharp;
 
 namespace CourseplayEditor.Implementation.Layers
@@ -45,7 +46,7 @@ namespace CourseplayEditor.Implementation.Layers
             {
                 if (Course.Waypoints.Length == 1)
                 {
-                    canvas.DrawCircle(ToSkPoint(Course.Waypoints.Single()), 2f, paint);
+                    canvas.DrawCircle(Course.Waypoints.Single().ToSkPoint(), 2f, paint);
                     return;
                 }
 
@@ -61,12 +62,7 @@ namespace CourseplayEditor.Implementation.Layers
 
         private ICollection<SKPoint> GeneratePoints(Course course)
         {
-            return course.Waypoints.Select(v => ToSkPoint(v)).ToArray();
-        }
-
-        private static SKPoint ToSkPoint(Waypoint firstPoint)
-        {
-            return new SKPoint(firstPoint.Point.X, firstPoint.Point.Y);
+            return course.Waypoints.Select(v => v.ToSkPoint()).ToArray();
         }
 
         public void Dispose()

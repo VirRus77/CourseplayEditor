@@ -6,7 +6,9 @@ using System.Windows.Input;
 using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Controllers;
+using CourseEditor.Drawing.Implementation;
 using CourseplayEditor.Contracts;
+using CourseplayEditor.Implementation;
 using CourseplayEditor.Model;
 using CourseplayEditor.Tools;
 using CourseplayEditor.Tools.Courseplay;
@@ -24,6 +26,7 @@ namespace CourseplayEditor.ViewModel
     {
         private readonly ICourseLayerManager _layerManager;
         private readonly ICourseFile _courseFile;
+        private readonly SelectableObjects.IModelSelectableObjects _selectableObjects;
         private readonly ISelectableController _selectableController;
         private ICollection<Course> _courses;
         private ICollection<SplineMap> _splineMaps;
@@ -32,12 +35,14 @@ namespace CourseplayEditor.ViewModel
             IServiceProvider serviceProvider,
             ICourseLayerManager layerManager,
             ICourseFile courseFile,
+            SelectableObjects.IModelSelectableObjects selectableObjects,
             ISelectableController selectableController
         )
         {
             ServiceProvider = serviceProvider;
             _layerManager = layerManager;
             _courseFile = courseFile;
+            _selectableObjects = selectableObjects;
             _selectableController = selectableController;
 
             OpenCommand = new RelayCommand(() => OpenCommandExecute());
@@ -96,6 +101,7 @@ namespace CourseplayEditor.ViewModel
                                  .Select(course => new Course(course))
                                  .ToArray();
             _layerManager.AddCourses(Courses);
+            _selectableObjects.AddSelectableObjects(Courses);
             AddMapBackgroundByCourseFile(fileName);
             AddMapSplinesByCourseFile(fileName);
         }
@@ -165,6 +171,7 @@ namespace CourseplayEditor.ViewModel
 
             splines = TransformToMap(filePath, splines) ?? splines;
             SplineMaps = splines.Select(v => new SplineMap(v)).ToArray();
+            _selectableObjects.AddSelectableObjects(SplineMaps);
             _layerManager.AddMapSplines(SplineMaps);
         }
 

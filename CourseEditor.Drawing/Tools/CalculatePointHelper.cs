@@ -12,6 +12,11 @@ namespace CourseEditor.Drawing.Tools
             return ToMapPoint(mapSettings.PointLeftTop, mapSettings.Scale, controlPoint);
         }
 
+        public static float ToMapDistance(MapSettings mapSettings, float controlPoint)
+        {
+            return controlPoint * 1f / mapSettings.Scale;
+        }
+
         /// <inheritdoc />
         public static SKPoint ToDeltaMapPoint(MapSettings mapSettings, SKPoint controlPoint)
         {

@@ -3,6 +3,7 @@
     public enum MouseOperationType
     {
         Move,
-        Zoom
+        Zoom,
+        Select,
     }
 }

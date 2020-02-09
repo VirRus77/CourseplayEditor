@@ -16,7 +16,7 @@ namespace CourseEditor.Drawing.Controllers.Mouse
 
         public override bool OnMouseWheel(MouseWheelEventArgs mouseWheelEventArgs, SKPoint controlPosition)
         {
-            var zoomDelta = mouseWheelEventArgs.Delta / 120;
+            var zoomDelta = mouseWheelEventArgs.Delta / System.Windows.Input.Mouse.MouseWheelDeltaForOneLine;
             _mapSettingsController.ZoomByControlPoint(zoomDelta, controlPosition);
             return true;
         }

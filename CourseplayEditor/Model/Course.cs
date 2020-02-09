@@ -6,7 +6,6 @@ namespace CourseplayEditor.Model
 {
     public class Course : BaseSelectableModel
     {
-        private bool _selected;
         private string _name;
         private float _workWidth;
         private int _numHeadlandLanes;
