@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using CourseplayEditor.Tools.Extensions;
 using Microsoft.Xaml.Behaviors;
 
 namespace CourseplayEditor.Tools.Behaviors
@@ -33,13 +34,24 @@ namespace CourseplayEditor.Tools.Behaviors
             }
 
             var item = e.NewValue as TreeViewItem
-                ?? behavior.AssociatedObject?.ItemContainerGenerator.ContainerFromItem(e.NewValue) as TreeViewItem;
-            if (item == null)
-            {
-                return;
-            }
+                ?? behavior.AssociatedObject?.ContainerFromItem(e.NewValue);
 
-            item.SetValue(TreeViewItem.IsSelectedProperty, true);
+            ParentExpand(item);
+            item?.SetValue(TreeViewItem.IsSelectedProperty, true);
+            item?.Focus();
+        }
+
+        private static void ParentExpand(TreeViewItem item)
+        {
+            TreeViewItem parent;
+            do
+            {
+                parent = item?.Parent as TreeViewItem;
+                if (parent != null && !parent.IsExpanded)
+                {
+                    parent.IsExpanded = true;
+                }
+            } while (parent != null);
         }
 
         #endregion

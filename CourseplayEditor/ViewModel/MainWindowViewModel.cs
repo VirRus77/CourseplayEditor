@@ -6,7 +6,7 @@ using System.Windows.Input;
 using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Controllers;
-using CourseEditor.Drawing.Implementation;
+using CourseEditor.Drawing.Tools;
 using CourseplayEditor.Contracts;
 using CourseplayEditor.Implementation;
 using CourseplayEditor.Model;
@@ -14,7 +14,6 @@ using CourseplayEditor.Tools;
 using CourseplayEditor.Tools.Courseplay;
 using CourseplayEditor.Tools.FarmSimulator;
 using CourseplayEditor.Tools.FarmSimulator.v2019.Map;
-using I3dShapes.Container;
 using I3dShapes.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
@@ -30,6 +29,7 @@ namespace CourseplayEditor.ViewModel
         private readonly ISelectableController _selectableController;
         private ICollection<Course> _courses;
         private ICollection<SplineMap> _splineMaps;
+        private bool _selectChanged;
 
         public MainWindowViewModel(
             IServiceProvider serviceProvider,
@@ -44,6 +44,7 @@ namespace CourseplayEditor.ViewModel
             _courseFile = courseFile;
             _selectableObjects = selectableObjects;
             _selectableController = selectableController;
+            _selectableController.Changed += SelectableControllerOnChanged;
 
             OpenCommand = new RelayCommand(() => OpenCommandExecute());
             OpenMapCommand = new RelayCommand(() => OpenMapCommandExecute());
@@ -51,6 +52,13 @@ namespace CourseplayEditor.ViewModel
 
             // Manual
             serviceProvider.GetService<MouseController>();
+        }
+
+        private void SelectableControllerOnChanged(object? sender, ValueEventArgs<ICollection<ISelectable>> e)
+        {
+            _selectChanged = true;
+            SelectedItem = e.Value?.Any() == true ? e.Value.First() : null;
+            _selectChanged = false;
         }
 
         public IServiceProvider ServiceProvider { get; }
@@ -70,7 +78,14 @@ namespace CourseplayEditor.ViewModel
         public ISelectable SelectedItem
         {
             get => _selectableController.Value.FirstOrDefault();
-            set => _selectableController.Select(value);
+            set
+            {
+                if (!_selectChanged)
+                {
+                    _selectableController.Select(value);
+                }
+                OnPropertyChanged();
+            }
         }
 
         public ICollection<SplineMap> SplineMaps
@@ -89,7 +104,7 @@ namespace CourseplayEditor.ViewModel
                 Multiselect = false,
                 Filter = $"Courseplay Manager|{CourseplayConstants.CourseplayFileName}|Xml|*.xml"
             };
-            
+
             if (fileOpenDialog.ShowDialog() != true)
             {
                 return;

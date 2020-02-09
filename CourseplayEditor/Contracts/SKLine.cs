@@ -1,4 +1,4 @@
-﻿using System;
+﻿using CourseEditor.Drawing.LinearMath;
 using SkiaSharp;
 
 namespace CourseplayEditor.Contracts
@@ -17,38 +17,30 @@ namespace CourseplayEditor.Contracts
 
         public SKPoint PerpendicularPointOnLine(SKPoint point)
         {
-            /*
-A(xa,ya), B(xb,yb), C(xc,yc).
-AB(dx,dy) = (xb-xa, yb-ya).
-BC(dy,-dx) //поверь на слово
-C = B + BC = (xb+dy, yb-dx) = (xb+yb-ya, yb+xa-xb).
-             */
-            var xa = Point1.X;
-            var ya = Point1.Y;
-            var xb = Point2.X;
-            var yb = Point2.Y;
-            var xc = point.X;
-            var yc = point.Y;
-            return new SKPoint(xb + yb - ya, yb + xa - xb);
+            //            /*
+            //A(xa,ya), B(xb,yb), C(xc,yc).
+            //AB(dx,dy) = (xb-xa, yb-ya).
+            //BC(dy,-dx) //поверь на слово
+            //C = B + BC = (xb+dy, yb-dx) = (xb+yb-ya, yb+xa-xb).
+            //             */
+            //            var xa = Point1.X;
+            //            var ya = Point1.Y;
+            //            var xb = Point2.X;
+            //            var yb = Point2.Y;
+            //            var xc = point.X;
+            //            var yc = point.Y;
+
+            //            var x = ((xa - xb) * xc / (yb - ya) - (yb - ya) * xa / (xb - xa) + ya - yc) /
+            //                    ((xa - xb) / (yb - ya) - (yb - ya) / (xb - xa));
+            //            var y = (xa - xb) * x / (yb - ya) - (xa - xb) * xc / (yb - ya) + yc;
+
+            LinearArithmetic.Perpendicular(Point1.X, Point1.Y, Point2.X, Point2.Y, point.X, point.Y, out var pointX, out var pointY);
+            return new SKPoint(pointX, pointY);
         }
 
         public bool OnLine(SKPoint point)
         {
-            /*
-A(x1, y1) и B(x2, y2), C(x, y)
-dx1 = x2 - x1;
-dy1 = y2 - y1;
-
-dx = x - x1;
-dy = y - y1;
-
-S = dx1 * dy - dx * dy1;
-             */
-            var dx1 = Point2.X - Point1.X;
-            var dy1 = Point2.Y - Point1.Y;
-            var dx = point.X - Point1.X;
-            var dy = point.Y - Point1.Y;
-            return Math.Abs(dx1 * dy - dx * dy1) < 0.00001;
+            return LinearArithmetic.IsBetween(Point1.X, Point1.Y, Point2.X, Point2.Y, point.X, point.Y);
         }
 
         public float MinimalDistance(SKPoint point)

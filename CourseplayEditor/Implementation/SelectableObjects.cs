@@ -15,6 +15,26 @@ namespace CourseplayEditor.Implementation
     /// <inheritdoc />
     public class SelectableObjects : SelectableObjects.IModelSelectableObjects
     {
+        private class ComparerSelectable : IComparer<ISelectable>
+        {
+            public int Compare(ISelectable x, ISelectable y)
+            {
+                if (x is Waypoint)
+                {
+                    if (y is Course)
+                    {
+                        return -1;
+                    }
+                }
+                else if (y is Waypoint)
+                {
+                    return 1;
+                }
+
+                return 0;
+            }
+        }
+
         public interface IModelSelectableObjects : IAddedSelectableObjects<ICollection<Course>>,
                                                    IAddedSelectableObjects<ICollection<SplineMap>>
         {
@@ -122,9 +142,11 @@ namespace CourseplayEditor.Implementation
         /// <inheritdoc />
         public ICollection<ISelectable> GetElements(SKPoint point, float radius)
         {
+            var comparerSelectable = new ComparerSelectable();
             return _selectableObjects
                    .SelectMany(v => v.Intersect(point, radius))
                    .Distinct()
+                   .OrderBy(v=> v, comparerSelectable)
                    .ToArray();
         }
     }

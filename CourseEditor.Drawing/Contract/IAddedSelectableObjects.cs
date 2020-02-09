@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CourseEditor.Drawing.Contract
+﻿namespace CourseEditor.Drawing.Contract
 {
     /// <summary>
     /// Менеджер всех объектов которые могут быть выбранны

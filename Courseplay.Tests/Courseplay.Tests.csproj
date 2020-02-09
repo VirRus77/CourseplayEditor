@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CourseEditor.Drawing\CourseEditor.Drawing.csproj" />
     <ProjectReference Include="..\CourseplayEditor.Tools\CourseplayEditor.Tools.csproj" />
+    <ProjectReference Include="..\CourseplayEditor\CourseplayEditor.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -55,25 +55,35 @@ namespace CourseplayEditor.Implementation.Layers
                 .ForEach(v => Draw(canvas, drawRect, paint, v));
             values
                 .OfType<Waypoint>()
-                .Where(v=>v.Course.Visible)
+                .Where(v => v.Course.Visible)
                 .ForEach(v => Draw(canvas, drawRect, paint, v));
         }
 
         private void Draw(SKCanvas canvas, SKRect drawRect, SKPaint paint, SplineMap splineMap)
         {
             DrawLines(canvas, drawRect, paint, splineMap.Points.Select(v => ToPoint(v)).ToArray());
+            splineMap.Points
+                     .Select(v => ToPoint(v))
+                     .ForEach(point => DrawPoint(canvas, drawRect, paint, point));
         }
 
         private void Draw(SKCanvas canvas, SKRect drawRect, SKPaint paint, Course course)
         {
             DrawLines(canvas, drawRect, paint, course.Waypoints.Select(v => ToPoint(v)).ToArray());
+            course.Waypoints
+                  .Select(v => ToPoint(v))
+                  .ForEach(point => DrawPoint(canvas, drawRect, paint, point));
         }
 
         private void Draw(SKCanvas canvas, SKRect drawRect, SKPaint paint, Waypoint waypoint)
         {
-            var rectSize = 5f / _mapSettingsController.Value.Scale;
             var point = ToPoint(waypoint);
+            DrawPoint(canvas, drawRect, paint, point);
+        }
 
+        private void DrawPoint(SKCanvas canvas, SKRect drawRect, SKPaint paint, SKPoint point)
+        {
+            var rectSize = 5f / _mapSettingsController.Value.Scale;
             canvas.DrawRect(point.X - rectSize / 2f, point.Y - rectSize / 2f, rectSize, rectSize, paint);
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Input;
 using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
@@ -74,16 +73,16 @@ namespace CourseEditor.Drawing.Controllers.Mouse
             var mapPoint = CalculatePointHelper.ToMapPoint(MapSettings, controlPosition);
             var radius = CalculatePointHelper.ToMapDistance(MapSettings, _selectRadius);
 
-            var selectedObjects = _selectableController.Value.FirstOrDefault();
+            var selectedObject = _selectableController.Value.FirstOrDefault();
             var intersectObjects = _selectableObjects.GetElements(mapPoint, radius);
 
-            if (!intersectObjects.Any())
+            if (!intersectObjects.Any() || intersectObjects.Count == 1 && intersectObjects.First() == selectedObject)
             {
                 _selectableController.ClearSelect();
             }
             else
             {
-                var index = intersectObjects.IndexOf(selectedObjects);
+                var index = intersectObjects.IndexOf(selectedObject);
                 if (index == -1 || intersectObjects.Count == index + 1)
                 {
                     _selectableController.Select(intersectObjects.First());
