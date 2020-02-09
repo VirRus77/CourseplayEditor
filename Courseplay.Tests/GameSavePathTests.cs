@@ -13,6 +13,9 @@ namespace Courseplay.Tests
         }
 
         [TestMethod]
+        [DataRow(FarmSimulatorVersion.FarmingSimulator2015)]
+        [DataRow(FarmSimulatorVersion.FarmingSimulator2017)]
+        [DataRow(FarmSimulatorVersion.FarmingSimulator2019)]
         public void GetGameSavePathTest(FarmSimulatorVersion version)
         {
             var path = GamePaths.GetSavesPath(version);

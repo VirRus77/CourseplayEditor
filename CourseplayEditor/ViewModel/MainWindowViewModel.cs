@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,8 +12,8 @@ using CourseplayEditor.Tools;
 using CourseplayEditor.Tools.Courseplay;
 using CourseplayEditor.Tools.FarmSimulator;
 using CourseplayEditor.Tools.FarmSimulator.v2019.Map;
-using I3DShapesTool.Lib.Container;
-using I3DShapesTool.Lib.Model;
+using I3dShapes.Container;
+using I3dShapes.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using File = System.IO.File;
@@ -159,11 +158,9 @@ namespace CourseplayEditor.ViewModel
                 return;
             }
 
-            var fileContainer = new FileContainer(filePath);
-            var entities = fileContainer.GetEntities()
-                                        .Where(entity => entity.Type == 2);
-            var splines = fileContainer.ReadRawData(entities)
-                                       .Select(v => new Spline(v.RawData, fileContainer.Endian, fileContainer.Header.Version))
+            var fileContainer = new ShapeFile(filePath);
+            var splines = fileContainer.ReadKnowTypes(ShapeType.Spline)
+                                       .OfType<Spline>()
                                        .ToArray();
 
             splines = TransformToMap(filePath, splines) ?? splines;

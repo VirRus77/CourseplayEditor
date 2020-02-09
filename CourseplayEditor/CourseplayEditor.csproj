@@ -32,10 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core\Core.csproj" />
     <ProjectReference Include="..\CourseEditor.Drawing\CourseEditor.Drawing.csproj" />
     <ProjectReference Include="..\CourseplayEditor.Tools\CourseplayEditor.Tools.csproj" />
-    <ProjectReference Include="..\I3DShapesTool\I3DShapesTool.Lib\I3DShapesTool.Lib.csproj" />
+    <ProjectReference Include="..\I3dShapes\I3dShapes\I3dShapes.csproj" />
   </ItemGroup>
 
   <ItemGroup>

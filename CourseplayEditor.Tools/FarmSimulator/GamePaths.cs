@@ -34,6 +34,10 @@ namespace CourseplayEditor.Tools.FarmSimulator
 
         public static string GetSavesPath(FarmSimulatorVersion version)
         {
+            if (!VersionToNameSaveDirectory.ContainsKey(version))
+            {
+                throw new NotSupportedException();
+            }
             return Path.Combine(MyGamesPath, VersionToNameSaveDirectory[version]);
         }
 

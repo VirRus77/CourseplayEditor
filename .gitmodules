@@ -1,7 +1,6 @@
 [submodule "Core"]
 	path = Core
 	url = https://github.com/VirRus77/Core.git
-[submodule "I3DShapesTool"]
-	path = I3DShapesTool
-	url = https://github.com/VirRus77/I3DShapesTool.git
-	branch = LastChanges
+[submodule "I3dShapes"]
+	path = I3dShapes
+	url = https://github.com/VirRus77/I3dShapes.git

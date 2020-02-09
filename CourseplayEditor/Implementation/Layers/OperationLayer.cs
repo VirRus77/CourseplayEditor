@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Implementation;

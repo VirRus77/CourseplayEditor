@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using I3DShapesTool.Lib.Model;
+using I3dShapes.Model;
+using I3dShapes.Model.Primitive;
 using SkiaSharp;
 
 namespace CourseplayEditor.Model
@@ -58,7 +59,7 @@ namespace CourseplayEditor.Model
             _points.AddRange(spline.Points.Select(v => ToSKPoint(v)));
         }
 
-        private SKPoint3 ToSKPoint(I3DVector vector)
+        private SKPoint3 ToSKPoint(PointVector vector)
         {
             return new SKPoint3(vector.X, vector.Z, vector.Y);
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CourseEditor.Drawing.Implementation;
 using CourseplayEditor.Model;
-using I3DShapesTool.Lib.Model;
 using SkiaSharp;
 
 namespace CourseplayEditor.Implementation.Layers
@@ -70,10 +69,10 @@ namespace CourseplayEditor.Implementation.Layers
             return new SKPoint(point.X, point.Y);
         }
 
-        private static SKPoint ToSkPoint(I3DVector vector)
-        {
-            return new SKPoint(vector.X, vector.Z);
-        }
+        //private static SKPoint ToSkPoint(I3DVector vector)
+        //{
+        //    return new SKPoint(vector.X, vector.Z);
+        //}
 
         private static ICollection<SKPoint> GeneratePoints(IEnumerable<SKPoint3> splinePoints)
         {

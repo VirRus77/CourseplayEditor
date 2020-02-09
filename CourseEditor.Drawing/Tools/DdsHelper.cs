@@ -4,6 +4,9 @@ using SkiaSharp;
 
 namespace CourseEditor.Drawing.Tools
 {
+    /// <summary>
+    /// https://github.com/nickbabcock/Pfim/blob/master/src/Pfim.Skia/Program.cs
+    /// </summary>
     public static class DdsHelper
     {
         public static SKImage Load(string filePath)

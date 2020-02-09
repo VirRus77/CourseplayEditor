@@ -9,6 +9,10 @@ namespace CourseplayEditor.Tools.FarmSimulator.v2019.Map
     [XmlRoot("i3D")]
     public class MapFile
     {
+        protected MapFile()
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>

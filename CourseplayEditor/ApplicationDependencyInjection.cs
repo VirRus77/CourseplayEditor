@@ -3,6 +3,7 @@ using CourseEditor.Drawing;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Control;
 using CourseEditor.Drawing.Controllers;
+using CourseEditor.Drawing.Controllers.Mouse;
 using CourseEditor.Drawing.Implementation;
 using CourseplayEditor.Configuration;
 using CourseplayEditor.Contracts;
@@ -77,6 +78,7 @@ namespace CourseplayEditor
                 .AddSingleton<ICurrentPositionController, CurrentPositionController>()
                 .AddSingleton<ISelectableController, SelectableController>()
                 .AddSingleton<IMapSettingsController, MapSettingsController>()
+                .AddSingleton<IMouseOperationManager, MouseOperationManager>()
                 .AddSingleton<IDrawCurrentPosition, DrawCurrentPosition>();
 
             serviceCollection
