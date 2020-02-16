@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace CourseEditor.Drawing.Contract
 {
-    /// <summary>
+    /// <summary xml:lang="ru">
     /// Контроллер для управления настройками карты
     /// </summary>
     public interface IMapSettingsController : IValueController<MapSettings>

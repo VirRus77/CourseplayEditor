@@ -4,97 +4,78 @@ using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Implementation;
 using CourseEditor.Drawing.Tools;
+using CourseplayEditor.Contracts;
 using CourseplayEditor.Model;
 using SkiaSharp;
 
 namespace CourseplayEditor.Implementation.Layers
 {
-    public class OperationLayer : BaseDrawLayer
+    public class OperationLayer : BaseDrawLayer, IOperationLayer
     {
+        public const string SelectableItemsKey = "SelectableItems";
+
         private readonly ISelectableController _selectableController;
         private readonly IMapSettingsController _mapSettingsController;
+        private readonly IManagedDrawSelectableObject _drawSelectableObject;
 
-        public OperationLayer(ISelectableController selectableController, IMapSettingsController mapSettingsController)
+        private readonly IList<IOperationLayer.DrawAction> _drawActions;
+
+        public OperationLayer(
+            ISelectableController selectableController,
+            IMapSettingsController mapSettingsController,
+            IManagedDrawSelectableObject drawSelectableObject
+        )
         {
             IsVisible = true;
             _selectableController = selectableController;
             _mapSettingsController = mapSettingsController;
+            _drawSelectableObject = drawSelectableObject;
             _selectableController.Changed += SelectableControllerOnChanged;
+
+            _drawActions = new List<IOperationLayer.DrawAction>();
         }
 
         public override void Draw(SKCanvas canvas, SKRect drawRect)
         {
-            if (!_selectableController.Value.Any())
+            if (_selectableController.Value.Any())
             {
-                return;
+                DrawSelectedItems(canvas, drawRect, _selectableController.Value);
             }
 
-            using (var paint = new SKPaint
+            if (_drawActions.Any())
             {
-                Color = new SKColor(255, 0, 220)
-            })
-            {
-                DrawSelectedItems(canvas, drawRect, paint, _selectableController.Value);
+                _drawActions.ForEach(v => v(canvas, drawRect));
             }
+        }
+
+        public void AddDraw(IOperationLayer.DrawAction drawAction)
+        {
+            _drawActions.Add(drawAction);
+        }
+
+        public void RemoveDraw(IOperationLayer.DrawAction drawAction)
+        {
+            _drawActions.Remove(drawAction);
         }
 
         private void DrawSelectedItems(
             SKCanvas canvas,
             SKRect drawRect,
-            SKPaint paint,
             ICollection<ISelectable> values
         )
         {
             values
                 .OfType<SplineMap>()
                 .Where(v => v.Visible)
-                .ForEach(v => Draw(canvas, drawRect, paint, v));
+                .ForEach(v => _drawSelectableObject.Draw(SelectableItemsKey, canvas, drawRect, v));
             values
                 .OfType<Course>()
                 .Where(v => v.Visible)
-                .ForEach(v => Draw(canvas, drawRect, paint, v));
+                .ForEach(v => _drawSelectableObject.Draw(SelectableItemsKey, canvas, drawRect, v));
             values
                 .OfType<Waypoint>()
                 .Where(v => v.Course.Visible)
-                .ForEach(v => Draw(canvas, drawRect, paint, v));
-        }
-
-        private void Draw(SKCanvas canvas, SKRect drawRect, SKPaint paint, SplineMap splineMap)
-        {
-            DrawLines(canvas, drawRect, paint, splineMap.Points.Select(v => ToPoint(v)).ToArray());
-            splineMap.Points
-                     .Select(v => ToPoint(v))
-                     .ForEach(point => DrawPoint(canvas, drawRect, paint, point));
-        }
-
-        private void Draw(SKCanvas canvas, SKRect drawRect, SKPaint paint, Course course)
-        {
-            DrawLines(canvas, drawRect, paint, course.Waypoints.Select(v => ToPoint(v)).ToArray());
-            course.Waypoints
-                  .Select(v => ToPoint(v))
-                  .ForEach(point => DrawPoint(canvas, drawRect, paint, point));
-        }
-
-        private void Draw(SKCanvas canvas, SKRect drawRect, SKPaint paint, Waypoint waypoint)
-        {
-            var point = ToPoint(waypoint);
-            DrawPoint(canvas, drawRect, paint, point);
-        }
-
-        private void DrawPoint(SKCanvas canvas, SKRect drawRect, SKPaint paint, SKPoint point)
-        {
-            var rectSize = 5f / _mapSettingsController.Value.Scale;
-            canvas.DrawRect(point.X - rectSize / 2f, point.Y - rectSize / 2f, rectSize, rectSize, paint);
-        }
-
-        private SKPoint ToPoint(Waypoint point)
-        {
-            return ToPoint(point.Point);
-        }
-
-        private SKPoint ToPoint(SKPoint3 point)
-        {
-            return new SKPoint(point.X, point.Y);
+                .ForEach(v => _drawSelectableObject.Draw(SelectableItemsKey, canvas, drawRect, v));
         }
 
         private void SelectableControllerOnChanged(object? sender, ValueEventArgs<ICollection<ISelectable>> e)

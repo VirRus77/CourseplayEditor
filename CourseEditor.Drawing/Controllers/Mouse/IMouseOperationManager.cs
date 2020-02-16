@@ -1,4 +1,9 @@
-﻿namespace CourseEditor.Drawing.Controllers.Mouse
+﻿using System;
+using System.Windows;
+using System.Windows.Input;
+using CourseEditor.Drawing.Contract.Operations;
+
+namespace CourseEditor.Drawing.Controllers.Mouse
 {
     /// <summary>
     /// 
@@ -8,8 +13,9 @@
         /// <summary>
         /// Текущая операция мишки.
         /// </summary>
-        IMouseOperation CurrentMouseOperation { get; }
+        IOperation CurrentOperation { get; }
 
         void StopOperation();
+        void KeyChanged(KeyEventArgs keyEventArgs);
     }
 }

@@ -134,14 +134,9 @@ namespace CourseEditor.Drawing.Implementation
                 return;
             }
 
-            layers.ForEach(
-                layer =>
-                {
-                    layer.Changed -= LayerOnChanged;
-                    _layers.Remove(layer);
-                }
-            );
-            RaiseChanged();
+            using var beginChanging = BeginChanging();
+            layers
+                .ForEach(layer => RemoveLayer(layer));
         }
 
         /// <inheritdoc />

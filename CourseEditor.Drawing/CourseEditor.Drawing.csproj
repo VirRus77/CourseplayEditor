@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    
+
     <UseWPF>true</UseWPF>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -10,8 +10,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
     <PackageReference Include="SkiaSharp" Version="1.68.1.1" />
     <PackageReference Include="Pfim" Version="0.9.1" />
+    <!--<PackageReference Include="Surviveplus.XmlCommentLocalization" Version="1.0.6.2" PrivateAssets="All" />-->
   </ItemGroup>
 
   <ItemGroup>

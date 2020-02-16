@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using SkiaSharp;
 
-namespace CourseEditor.Drawing.Tools
+namespace CourseEditor.Drawing.Tools.Extensions
 {
     public static class PointExtensions
     {

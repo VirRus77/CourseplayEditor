@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Tools.Extensions;
 using CourseEditor.Drawing.Contract;
 using CourseplayEditor.Contracts;
 using CourseplayEditor.Model;
+using CourseplayEditor.Tools.Extensions;
 
 namespace CourseplayEditor.Implementation.Layers
 {
     /// <inheritdoc />
     public class CourseLayerManager : ICourseLayerManager
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly IDrawLayerManager _drawLayerManager;
         private readonly ICollection<IDrawLayer> _courseLayers;
-        private readonly OperationLayer _operationLayer;
+        private readonly IOperationLayer _operationLayer;
         private readonly ICollection<IDrawLayer> _mapSplines;
         private BackgroundMapDrawLayer _mapBackgroundLayer;
 
@@ -20,8 +23,13 @@ namespace CourseplayEditor.Implementation.Layers
         /// Конструктор <inheritdoc cref="CourseLayerManager"/>
         /// </summary>
         /// <param name="drawLayerManager"></param>
-        public CourseLayerManager(IDrawLayerManager drawLayerManager, OperationLayer operationLayer)
+        public CourseLayerManager(
+            IServiceProvider serviceProvider,
+            IDrawLayerManager drawLayerManager,
+            IOperationLayer operationLayer
+        )
         {
+            _serviceProvider = serviceProvider;
             _drawLayerManager = drawLayerManager;
             _operationLayer = operationLayer;
             Initialize(_drawLayerManager);
@@ -60,7 +68,7 @@ namespace CourseplayEditor.Implementation.Layers
                 .Select(
                     course =>
                     {
-                        var layer = new CourseDrawLayer();
+                        var layer = _serviceProvider.CreateInstance<CourseDrawLayer>();
                         layer.Load(course);
                         return layer;
                     }
@@ -91,7 +99,7 @@ namespace CourseplayEditor.Implementation.Layers
                 .Select(
                     spline =>
                     {
-                        var layer = new SplineDrawLayer();
+                        var layer = _serviceProvider.CreateInstance<SplineDrawLayer>();
                         layer.Load(spline);
                         return layer;
                     }

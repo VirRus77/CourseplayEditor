@@ -10,12 +10,25 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Themes\Cursors\Arrow.cur" />
+    <None Remove="Themes\Cursors\ArrowAdd.cur" />
+    <None Remove="Themes\Cursors\ArrowMove.cur" />
+    <None Remove="Themes\Cursors\ArrowRectangle.cur" />
+    <None Remove="Themes\Cursors\Grabbing.cur" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Themes\Cursors\Arrow.cur" />
+    <EmbeddedResource Include="Themes\Cursors\ArrowAdd.cur" />
+    <EmbeddedResource Include="Themes\Cursors\ArrowMove.cur" />
+    <EmbeddedResource Include="Themes\Cursors\ArrowRectangle.cur" />
+    <EmbeddedResource Include="Themes\Cursors\Grabbing.cur" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,20 +40,19 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="SkiaSharp.Views.WPF" Version="1.68.2-preview.21" />
+    <PackageReference Include="VirRus77.I3dShapes" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CourseEditor.Drawing\CourseEditor.Drawing.csproj" />
     <ProjectReference Include="..\CourseplayEditor.Tools\CourseplayEditor.Tools.csproj" />
-    <ProjectReference Include="..\I3dShapes\I3dShapes\I3dShapes.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Themes\" />
     <Folder Include="View\" />
   </ItemGroup>
-
 </Project>

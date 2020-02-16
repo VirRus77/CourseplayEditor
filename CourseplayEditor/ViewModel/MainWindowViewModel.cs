@@ -18,6 +18,7 @@ using I3dShapes.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using File = System.IO.File;
+using Shape = CourseplayEditor.Tools.FarmSimulator.v2019.Map.Shape;
 
 namespace CourseplayEditor.ViewModel
 {

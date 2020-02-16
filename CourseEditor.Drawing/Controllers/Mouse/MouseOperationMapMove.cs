@@ -1,5 +1,8 @@
 ﻿using System.Windows.Input;
 using CourseEditor.Drawing.Contract;
+using CourseEditor.Drawing.Contract.Operations;
+using CourseEditor.Drawing.Tools;
+using Microsoft.Extensions.Logging;
 using SkiaSharp;
 
 namespace CourseEditor.Drawing.Controllers.Mouse
@@ -7,11 +10,19 @@ namespace CourseEditor.Drawing.Controllers.Mouse
     public class MouseOperationMapMove : BaseMouseOperation
     {
         private readonly IMapSettingsController _mapSettingsController;
+        private readonly IMapMoveOperation _mapMoveOperation;
+        private readonly ILogger<MouseOperationMapMove> _logger;
 
-        public MouseOperationMapMove(IMapSettingsController mapSettingsController)
+        public MouseOperationMapMove(
+            IMapSettingsController mapSettingsController,
+            IMapMoveOperation mapMoveOperation,
+            ILogger<MouseOperationMapMove> logger
+        )
             : base(MouseOperationType.Move, MouseEventType.Move | MouseEventType.Up | MouseEventType.Down)
         {
             _mapSettingsController = mapSettingsController;
+            _mapMoveOperation = mapMoveOperation;
+            _logger = logger;
         }
 
         protected void Delta(SKPoint currentPoint)
@@ -30,25 +41,41 @@ namespace CourseEditor.Drawing.Controllers.Mouse
                 return false;
             }
 
-            Start(controlPosition);
-            return true;
+            IsRun = _mapMoveOperation.Start(
+                controlPosition,
+                CalculatePointHelper.ToMapPoint(_mapSettingsController.Value, controlPosition)
+            );
+            _logger.LogInformation("MouseOperationMapMove OnMouseDown IsRun: {IsRun}", IsRun);
+            return IsRun;
         }
 
         public override bool OnMouseMove(MouseEventArgs mouseEventArgs, SKPoint controlPosition)
         {
             IsRun = IsRun && (mouseEventArgs.MiddleButton == MouseButtonState.Pressed);
-            if (!IsRun)
+            _logger.LogInformation("MouseOperationMapMove OnMouseMove IsRun: {IsRun}", IsRun);
+            _logger.LogInformation("_mapMoveOperation IsRun: {IsRun}", _mapMoveOperation.IsRun);
+            if (!_mapMoveOperation.IsRun)
             {
                 return false;
             }
 
-            Delta(controlPosition);
-            return true;
+            if (mouseEventArgs.MiddleButton != MouseButtonState.Pressed || !IsRun)
+            {
+                return _mapMoveOperation.Stop(
+                    controlPosition,
+                    CalculatePointHelper.ToMapPoint(_mapSettingsController.Value, controlPosition)
+                );
+            }
+
+            return _mapMoveOperation.Change(
+                controlPosition,
+                CalculatePointHelper.ToMapPoint(_mapSettingsController.Value, controlPosition)
+            );
         }
 
         public override bool OnMouseUp(MouseButtonEventArgs mouseButtonEventArgs, SKPoint controlPosition)
         {
-            if (!IsRun ||
+            if (!_mapMoveOperation.IsRun ||
                 mouseButtonEventArgs.ChangedButton != MouseButton.Middle ||
                 mouseButtonEventArgs.ButtonState != MouseButtonState.Released)
             {

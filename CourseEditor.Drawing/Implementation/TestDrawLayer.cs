@@ -16,6 +16,11 @@ namespace CourseEditor.Drawing.Implementation
             canvas.DrawCircle(new SKPoint(100,100), 2, new SKPaint(){Color = new SKColor(255, 0, 0) } );
         }
 
+        public void Invalidate()
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+
         public bool IsVisible { get; set; }
     }
 }

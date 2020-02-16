@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Controllers.Implementation;
+using CourseEditor.Drawing.Implementation.Configuration;
 using CourseEditor.Drawing.Tools;
+using Microsoft.Extensions.Options;
 using SkiaSharp;
 
 namespace CourseEditor.Drawing.Implementation
@@ -10,15 +12,17 @@ namespace CourseEditor.Drawing.Implementation
     /// <inheritdoc />
     public class MapSettingsController : ValueController<MapSettings>, IMapSettingsController
     {
-        private float ZoomFactor = 1.25f;
+        private readonly IOptions<OperationOptions> _operationOptions;
+        private float ZoomFactor => _operationOptions.Value.ScaleFactor;
 
         private MapSettings MapSettings => Value;
         private SKPoint PointLeftTop => MapSettings.PointLeftTop;
         private float Scale => MapSettings.Scale;
 
-        public MapSettingsController()
+        public MapSettingsController(IOptions<OperationOptions> operationOptions)
             : base(new MapSettings(new SKPoint(0, 0), 2f))
         {
+            _operationOptions = operationOptions;
         }
 
         public void OffsetByMapPoint(in SKPoint mapPoint)

@@ -1,14 +1,16 @@
 ﻿namespace CourseEditor.Drawing.Contract
 {
     /// <summary>
-    /// Менеджер всех объектов которые могут быть выбранны
+    /// <para lang="ru">Менеджер всех объектов которые могут быть выбранны</para>
     /// </summary>
     public interface IAddedSelectableObjects<T> : ISelectableObjects
     {
         /// <summary>
-        /// Добавить курсы в выделяемые объекты.
+        /// <para lang="ru">Добавить курсы в выделяемые объекты.</para>
         /// </summary>
-        /// <param name="selectableObjects">Выделяемые объекты.</param>
+        /// <param name="selectableObjects">
+        /// <para lang="ru">Выделяемые объекты.</para>
+        /// </param>
         void AddSelectableObjects(T selectableObjects);
     }
 }

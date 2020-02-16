@@ -2,9 +2,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Input;
+using CourseEditor.Drawing.Contract;
 using CourseEditor.Drawing.Controllers.Mouse;
 using CourseEditor.Drawing.Tools;
+using CourseEditor.Drawing.Tools.Extensions;
 using Microsoft.Extensions.Logging;
+using CursorType = CourseEditor.Drawing.Contract.CursorType;
 
 namespace CourseEditor.Drawing.Controllers
 {
@@ -14,15 +17,18 @@ namespace CourseEditor.Drawing.Controllers
     public class MouseController : IDisposable
     {
         private readonly IMouseOperationManager _mouseOperationManager;
+        private readonly IManagerCursor _managerCursor;
         private readonly ILogger<MouseController> _logger;
         private FrameworkElement _frameworkElement;
 
         public MouseController(
             [NotNull] IMouseOperationManager mouseOperationManager,
+            IManagerCursor managerCursor,
             ILogger<MouseController> logger
         )
         {
             _mouseOperationManager = mouseOperationManager;
+            _managerCursor = managerCursor;
             _logger = logger;
         }
 
@@ -33,6 +39,13 @@ namespace CourseEditor.Drawing.Controllers
             _frameworkElement.MouseUp += ControlOnMouseUp;
             _frameworkElement.MouseDown += ControlOnMouseDown;
             _frameworkElement.MouseWheel += ControlOnMouseWheel;
+
+            _managerCursor.Init(cursor => _frameworkElement.Cursor = cursor);
+        }
+
+        private void FrameworkElementOnKeyChanged(object sender, KeyEventArgs e)
+        {
+            _mouseOperationManager.KeyChanged(e);
         }
 
         private void ControlOnMouseMove(object sender, MouseEventArgs e)
@@ -83,7 +96,7 @@ namespace CourseEditor.Drawing.Controllers
 
         private void MouseCapture(bool isCapture)
         {
-            if (isCapture && _mouseOperationManager.CurrentMouseOperation != null)
+            if (isCapture && _mouseOperationManager.CurrentOperation != null)
             {
                 _frameworkElement.CaptureMouse();
             }
@@ -91,6 +104,12 @@ namespace CourseEditor.Drawing.Controllers
             {
                 _frameworkElement.ReleaseMouseCapture();
             }
+        }
+
+        public void InitKeyboardHook(FrameworkElement mainWindows)
+        {
+            Keyboard.AddKeyDownHandler(mainWindows, FrameworkElementOnKeyChanged);
+            Keyboard.AddKeyUpHandler(mainWindows, FrameworkElementOnKeyChanged);
         }
     }
 }

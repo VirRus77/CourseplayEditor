@@ -1,7 +1,10 @@
-﻿namespace CourseplayEditor.Configuration
+﻿using CourseEditor.Drawing.Implementation;
+using CourseEditor.Drawing.Implementation.Configuration;
+
+namespace CourseplayEditor.Configuration
 {
     public class ApplicationConfiguration
     {
-        public float ScaleFactor { get; set; }
+        public OperationOptions OperationOptions { get; set; }
     }
 }

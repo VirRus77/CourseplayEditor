@@ -27,6 +27,11 @@ namespace CourseEditor.Drawing.Implementation
             }
         }
 
+        public void Invalidate()
+        {
+            Changed?.Invoke(this, EventArgs.Empty);
+        }
+
         public bool IsVisible { get; set; }
 
         private SKPoint GetPoint()

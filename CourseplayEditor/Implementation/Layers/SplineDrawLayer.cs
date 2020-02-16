@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CourseEditor.Drawing.Implementation;
+using CourseplayEditor.Contracts;
 using CourseplayEditor.Model;
 using SkiaSharp;
 
@@ -9,8 +10,12 @@ namespace CourseplayEditor.Implementation.Layers
 {
     public class SplineDrawLayer : BaseDrawLayer, IDisposable
     {
-        public SplineDrawLayer()
+        private readonly IManagedDrawSelectableObject _drawSelectableObject;
+        public const string SplineDrawLayerKey = "SplineDrawLayer";
+
+        public SplineDrawLayer(IManagedDrawSelectableObject drawSelectableObject)
         {
+            _drawSelectableObject = drawSelectableObject;
             IsVisible = true;
         }
 
@@ -41,21 +46,24 @@ namespace CourseplayEditor.Implementation.Layers
             {
                 if (Spline.Points.Count == 1)
                 {
-                    canvas.DrawCircle(ToSkPoint(Spline.Points.Single()), 2f, paint);
+                    _drawSelectableObject.DrawCircle(SplineDrawLayerKey, canvas, drawRect, ToSkPoint(Spline.Points.Single()), 2f);
+                    //canvas.DrawCircle(ToSkPoint(Spline.Points.Single()), 2f, paint);
                     return;
                 }
 
-                var points = GeneratePoints(Spline.Points);
-                var start = points.First();
-                points.Skip(1)
-                      .ToList()
-                      .ForEach(
-                          v =>
-                          {
-                              canvas.DrawLine(start, v, paint);
-                              start = v;
-                          }
-                      );
+                _drawSelectableObject.DrawLines(SplineDrawLayerKey, canvas, drawRect, GeneratePoints(Spline.Points));
+
+                //var points = GeneratePoints(Spline.Points);
+                //var start = points.First();
+                //points.Skip(1)
+                //      .ToList()
+                //      .ForEach(
+                //          v =>
+                //          {
+                //              canvas.DrawLine(start, v, paint);
+                //              start = v;
+                //          }
+                //      );
             }
         }
 

@@ -16,10 +16,16 @@ namespace CourseplayEditor.Tools.Tools
         /// <returns></returns>
         public static Stream ReadResource(Assembly assembly, string name)
         {
-            var resourcePath = assembly.GetManifestResourceNames()
+            var manifestResourceNames = assembly.GetManifestResourceNames();
+            var resourcePath = manifestResourceNames
                     .Single(str => str.EndsWith(name));
 
             return assembly.GetManifestResourceStream(resourcePath);
+        }
+
+        public static Stream ReadResource<T>(string name)
+        {
+            return ReadResource(typeof(T).Assembly, name);
         }
 
         public static Stream ReadResourceExecutingAssembly(string name)

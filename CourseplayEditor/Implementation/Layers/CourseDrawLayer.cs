@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CourseEditor.Drawing.Implementation;
+using CourseplayEditor.Contracts;
 using CourseplayEditor.Model;
 using CourseplayEditor.Tools.Extensions;
 using SkiaSharp;
@@ -10,8 +11,13 @@ namespace CourseplayEditor.Implementation.Layers
 {
     public class CourseDrawLayer : BaseDrawLayer, IDisposable
     {
-        public CourseDrawLayer()
+        public const string DrawCourseLayerKey = "DrawCourseLayer";
+
+        private readonly IManagedDrawSelectableObject _drawSelectableObject;
+
+        public CourseDrawLayer(IManagedDrawSelectableObject drawSelectableObject)
         {
+            _drawSelectableObject = drawSelectableObject;
             IsVisible = true;
         }
 
@@ -39,20 +45,14 @@ namespace CourseplayEditor.Implementation.Layers
                 return;
             }
 
-            using (var paint = new SKPaint
+            if (Course.Waypoints.Length == 1)
             {
-                Color = new SKColor(255, 0, 0)
-            })
-            {
-                if (Course.Waypoints.Length == 1)
-                {
-                    canvas.DrawCircle(Course.Waypoints.Single().ToSkPoint(), 2f, paint);
-                    return;
-                }
-
-                var points = GeneratePoints(Course);
-                DrawLines(canvas, drawRect, paint, points);
+                _drawSelectableObject.DrawCircle(DrawCourseLayerKey, canvas, drawRect, Course.Waypoints.Single().ToSkPoint(), 2f);
+                return;
             }
+
+            var points = GeneratePoints(Course);
+            _drawSelectableObject.DrawGradientLines(DrawCourseLayerKey, canvas, drawRect, points);
         }
 
         private void CourseOnChanged(object? sender, EventArgs e)
@@ -70,7 +70,6 @@ namespace CourseplayEditor.Implementation.Layers
             if (Course != null)
             {
                 Course.Changed -= CourseOnChanged;
-
             }
         }
     }

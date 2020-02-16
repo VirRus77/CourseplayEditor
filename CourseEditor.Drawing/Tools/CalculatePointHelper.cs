@@ -12,9 +12,9 @@ namespace CourseEditor.Drawing.Tools
             return ToMapPoint(mapSettings.PointLeftTop, mapSettings.Scale, controlPoint);
         }
 
-        public static float ToMapDistance(MapSettings mapSettings, float controlPoint)
+        public static float ToMapDistance(MapSettings mapSettings, float distance)
         {
-            return controlPoint * 1f / mapSettings.Scale;
+            return distance * 1f / mapSettings.Scale;
         }
 
         /// <inheritdoc />

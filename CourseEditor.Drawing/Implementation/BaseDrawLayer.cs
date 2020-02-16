@@ -24,6 +24,11 @@ namespace CourseEditor.Drawing.Implementation
             Draw(canvas, drawRect);
         }
 
+        public void Invalidate()
+        {
+            RaiseChanged();
+        }
+
         public abstract void Draw(SKCanvas canvas, SKRect drawRect);
 
         /// <inheritdoc />
@@ -48,27 +53,6 @@ namespace CourseEditor.Drawing.Implementation
 
             value = newValue;
             RaiseChanged();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="canvas"></param>
-        /// <param name="drawRect"></param>
-        /// <param name="paint"></param>
-        /// <param name="points"></param>
-        protected void DrawLines(SKCanvas canvas, SKRect drawRect, SKPaint paint, ICollection<SKPoint> points)
-        {
-            var start = points.First();
-            points.Skip(1)
-                  .ToList()
-                  .ForEach(
-                      v =>
-                      {
-                          canvas.DrawLine(start, v, paint);
-                          start = v;
-                      }
-                  );
         }
 
         /// <summary>
